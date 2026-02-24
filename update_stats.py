@@ -32,17 +32,16 @@ NBA_HEADSHOT_URL = "https://cdn.nba.com/headshots/nba/latest/1040x760/{player_id
 ESPN_HEADSHOT_URL = "https://a.espncdn.com/i/headshots/mens-college-basketball/players/full/{espn_id}.png"
 
 # ── NBA Roster ─────────────────────────────────────────────────────────────
-# espn_id = ESPN athlete ID used to fetch stats from ESPN's public API
 NBA_PLAYERS = [
-    {"id": 1630625, "espn_id": 4397885, "name": "Dalano Banton",   "ig": "_dubberdon",   "gleague_stats": True},
-    {"id": 1631217, "espn_id": 4433249, "name": "Moussa Diabaté",   "ig": "m0ussadiabate"},
-    {"id": 1642352, "espn_id": 4431786, "name": "Keshad Johnson",   "ig": "kj_showtime0"},
-    {"id": 1642939, "espn_id": 4696317, "name": "Miles Kelly",       "ig": "miles5kelly",  "gleague_stats": True},
-    {"id": 1630228, "espn_id": 4433247, "name": "Jonathan Kuminga",  "ig": "jonathan_kuminga"},
-    {"id": 1630544, "espn_id": 4432819, "name": "Tre Mann",          "ig": "treshaunmann"},
-    {"id": 1631169, "espn_id": 4687718, "name": "Josh Minott",       "ig": "jday.8"},
-    {"id": 1641803, "espn_id": 4592965, "name": "Tristen Newton",    "ig": "tristenewton", "gleague_stats": True},
-    {"id": 1641772, "espn_id": 5106268, "name": "Nae'Qwan Tomlin",   "ig": "nae_ratty"},
+    {"id": 1630625, "name": "Dalano Banton",   "ig": "_dubberdon",   "gleague_stats": True},
+    {"id": 1631217, "name": "Moussa Diabaté",   "ig": "m0ussadiabate"},
+    {"id": 1642352, "name": "Keshad Johnson",   "ig": "kj_showtime0"},
+    {"id": 1642939, "name": "Miles Kelly",       "ig": "miles5kelly",  "gleague_stats": True},
+    {"id": 1630228, "name": "Jonathan Kuminga",  "ig": "jonathan_kuminga"},
+    {"id": 1630544, "name": "Tre Mann",          "ig": "treshaunmann"},
+    {"id": 1631169, "name": "Josh Minott",       "ig": "jday.8"},
+    {"id": 1641803, "name": "Tristen Newton",    "ig": "tristenewton", "gleague_stats": True},
+    {"id": 1641772, "name": "Nae'Qwan Tomlin",   "ig": "nae_ratty"},
 ]
 
 # ── G-League Roster ────────────────────────────────────────────────────────
@@ -157,8 +156,22 @@ def slug(name):
     )
 
 
+def retry(fn, retries=3, delay=2):
+    """Retry a function up to `retries` times with exponential backoff."""
+    for attempt in range(retries):
+        try:
+            return fn()
+        except Exception as e:
+            if attempt < retries - 1:
+                wait = delay * (attempt + 1)
+                print(f"    ↻ Retry {attempt + 1}/{retries - 1} in {wait}s... ({e})")
+                time.sleep(wait)
+            else:
+                raise
+
+
 def fetch_nba_player_info(player_id):
-    """Get player bio from CommonPlayerInfo (used for G-League players)."""
+    """Get player bio from CommonPlayerInfo."""
     info = commonplayerinfo.CommonPlayerInfo(player_id=str(player_id), timeout=60)
     rs = info.get_dict()["resultSets"]
     bio = dict(zip(rs[0]["headers"], rs[0]["rowSet"][0]))
@@ -173,71 +186,6 @@ def fetch_nba_player_info(player_id):
         "team_abbr": bio.get("TEAM_ABBREVIATION", ""),
         "jersey": bio.get("JERSEY", ""),
     }
-
-
-# ── ESPN NBA helpers (more reliable than nba_api in CI environments) ──────
-
-ESPN_NBA_BIO_URL = "https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/athletes/{espn_id}"
-ESPN_NBA_STATS_URL = "https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/athletes/{espn_id}/stats"
-
-
-def fetch_espn_nba_player_info(espn_id):
-    """Get player bio from ESPN's public NBA API."""
-    data = fetch_json(ESPN_NBA_BIO_URL.format(espn_id=espn_id))
-    athlete = data.get("athlete", data)
-    team = athlete.get("team", {})
-    pos = athlete.get("position", {})
-    team_location = team.get("location", "")
-    team_name = team.get("name", "")
-    return {
-        "display_name": athlete.get("displayName", ""),
-        "position": pos.get("abbreviation", ""),
-        "team_city": team_location,
-        "team_name": team_name,
-        "team_full": team.get("displayName", "") or (f"{team_location} {team_name}".strip() if team_location else "Free Agent"),
-        "jersey": athlete.get("jersey", ""),
-    }
-
-
-def fetch_espn_nba_stats(espn_id):
-    """Fetch current-season NBA stats from ESPN's public API."""
-    data = fetch_json(ESPN_NBA_STATS_URL.format(espn_id=espn_id))
-    current_year = int(CURRENT_SEASON.split("-")[0]) + 1  # "2025-26" → 2026
-
-    # Find the "averages" category
-    for cat in data.get("categories", []):
-        if cat.get("name") != "averages":
-            continue
-        names = cat.get("names", [])
-
-        # Build a name→index mapping for dynamic lookup
-        idx = {n: i for i, n in enumerate(names)}
-
-        # Find the entry for the current season
-        for entry in cat.get("statistics", []):
-            season = entry.get("season", {})
-            if season.get("year") == current_year:
-                row = entry["stats"]
-                return {
-                    "ppg": float(row[idx["avgPoints"]]) if "avgPoints" in idx else 0.0,
-                    "rpg": float(row[idx["avgRebounds"]]) if "avgRebounds" in idx else 0.0,
-                    "apg": float(row[idx["avgAssists"]]) if "avgAssists" in idx else 0.0,
-                    "fg_pct": float(row[idx["fieldGoalPct"]]) if "fieldGoalPct" in idx else 0.0,
-                    "gp": int(row[idx["gamesPlayed"]]) if "gamesPlayed" in idx else 0,
-                }
-
-        # Fallback: use the most recent season if current not found
-        if cat.get("statistics"):
-            last = cat["statistics"][-1]
-            row = last["stats"]
-            return {
-                "ppg": float(row[idx["avgPoints"]]) if "avgPoints" in idx else 0.0,
-                "rpg": float(row[idx["avgRebounds"]]) if "avgRebounds" in idx else 0.0,
-                "apg": float(row[idx["avgAssists"]]) if "avgAssists" in idx else 0.0,
-                "fg_pct": float(row[idx["fieldGoalPct"]]) if "fieldGoalPct" in idx else 0.0,
-                "gp": int(row[idx["gamesPlayed"]]) if "gamesPlayed" in idx else 0,
-            }
-    return None
 
 
 def fetch_nba_stats(player_id, league_id=None, season=None):
@@ -332,27 +280,23 @@ def fetch_espn_college_stats(espn_id):
 
 
 def process_nba_players():
-    """Fetch and return NBA player data using ESPN API, sorted by team city."""
-    print("═══ NBA PLAYERS (via ESPN) ═══")
+    """Fetch and return NBA player data, sorted by team city."""
+    print("═══ NBA PLAYERS ═══")
     results = []
     for entry in NBA_PLAYERS:
         pid = entry["id"]
-        espn_id = entry["espn_id"]
-        print(f"  {entry['name']} (NBA {pid} / ESPN {espn_id})...")
+        print(f"  {entry['name']} (ID {pid})...")
         try:
-            info = fetch_espn_nba_player_info(espn_id)
+            info = retry(lambda: fetch_nba_player_info(pid))
             time.sleep(0.6)
-            stats = fetch_espn_nba_stats(espn_id)
+            stats = retry(lambda: fetch_nba_stats(pid))
             time.sleep(0.6)
 
-            # Also fetch G-League stats via nba_api if flagged
+            # Also fetch G-League stats if flagged
             gl_stats = None
             if entry.get("gleague_stats"):
-                try:
-                    gl_stats = fetch_nba_stats(pid, league_id="20")
-                    time.sleep(0.6)
-                except Exception as gl_err:
-                    print(f"    ⚠ G-League stats unavailable: {gl_err}")
+                gl_stats = retry(lambda: fetch_nba_stats(pid, league_id="20"))
+                time.sleep(0.6)
 
             headshot_file = f"{slug(entry['name'])}.png"
             download_file(
@@ -366,6 +310,7 @@ def process_nba_players():
                 "position": info["position"],
                 "team": info["team_full"],
                 "team_city": info["team_city"],
+                "team_abbr": info["team_abbr"],
                 "headshot_nba": NBA_HEADSHOT_URL.format(player_id=pid),
                 "headshot_local": f"images/players/{headshot_file}",
                 "ig": entry.get("ig", ""),
@@ -394,14 +339,14 @@ def process_gleague_players():
         try:
             # Get bio info (may fail for G-League-only players)
             try:
-                info = fetch_nba_player_info(pid)
+                info = retry(lambda: fetch_nba_player_info(pid))
                 time.sleep(0.6)
             except Exception:
                 info = None
 
             # Get G-League stats (league_id='20')
             season_override = entry.get("season")
-            stats = fetch_nba_stats(pid, league_id="20", season=season_override)
+            stats = retry(lambda: fetch_nba_stats(pid, league_id="20", season=season_override))
             time.sleep(0.6)
 
             # Resolve G-League team name from abbreviation

@@ -1,13 +1,14 @@
 {
-  "updated": "2026-02-24T16:21:18.536929",
+  "updated": "2026-02-24T16:35:58.280177",
   "season": "2025-26",
   "nba": [
     {
       "id": 1630228,
       "name": "Jonathan Kuminga",
-      "position": "F",
+      "position": "Forward",
       "team": "Atlanta Hawks",
       "team_city": "Atlanta",
+      "team_abbr": "ATL",
       "headshot_nba": "https://cdn.nba.com/headshots/nba/latest/1040x760/1630228.png",
       "headshot_local": "images/players/jonathan-kuminga.png",
       "ig": "jonathan_kuminga",
@@ -16,16 +17,18 @@
         "rpg": 5.9,
         "apg": 2.5,
         "fg_pct": 45.4,
-        "gp": 20
+        "gp": 20,
+        "team_abbr": "GSW"
       },
       "gleague_stats": null
     },
     {
       "id": 1630625,
       "name": "Dalano Banton",
-      "position": "F",
+      "position": "Forward",
       "team": "Boston Celtics",
       "team_city": "Boston",
+      "team_abbr": "BOS",
       "headshot_nba": "https://cdn.nba.com/headshots/nba/latest/1040x760/1630625.png",
       "headshot_local": "images/players/dalano-banton.png",
       "ig": "_dubberdon",
@@ -34,7 +37,8 @@
         "rpg": 0.5,
         "apg": 1.0,
         "fg_pct": 75.0,
-        "gp": 2
+        "gp": 2,
+        "team_abbr": "LAC"
       },
       "gleague_stats": {
         "ppg": 24.1,
@@ -48,9 +52,10 @@
     {
       "id": 1631169,
       "name": "Josh Minott",
-      "position": "F",
+      "position": "Forward",
       "team": "Brooklyn Nets",
       "team_city": "Brooklyn",
+      "team_abbr": "BKN",
       "headshot_nba": "https://cdn.nba.com/headshots/nba/latest/1040x760/1631169.png",
       "headshot_local": "images/players/josh-minott.png",
       "ig": "jday.8",
@@ -59,16 +64,18 @@
         "rpg": 3.6,
         "apg": 1.0,
         "fg_pct": 50.7,
-        "gp": 33
+        "gp": 33,
+        "team_abbr": "BOS"
       },
       "gleague_stats": null
     },
     {
       "id": 1631217,
-      "name": "Moussa Diabate",
-      "position": "F",
+      "name": "Moussa Diabaté",
+      "position": "Forward",
       "team": "Charlotte Hornets",
       "team_city": "Charlotte",
+      "team_abbr": "CHA",
       "headshot_nba": "https://cdn.nba.com/headshots/nba/latest/1040x760/1631217.png",
       "headshot_local": "images/players/moussa-diabate.png",
       "ig": "m0ussadiabate",
@@ -77,16 +84,18 @@
         "rpg": 8.6,
         "apg": 1.6,
         "fg_pct": 63.2,
-        "gp": 50
+        "gp": 50,
+        "team_abbr": "CHA"
       },
       "gleague_stats": null
     },
     {
       "id": 1630544,
       "name": "Tre Mann",
-      "position": "G",
+      "position": "Guard",
       "team": "Charlotte Hornets",
       "team_city": "Charlotte",
+      "team_abbr": "CHA",
       "headshot_nba": "https://cdn.nba.com/headshots/nba/latest/1040x760/1630544.png",
       "headshot_local": "images/players/tre-mann.png",
       "ig": "treshaunmann",
@@ -95,16 +104,18 @@
         "rpg": 2.2,
         "apg": 2.1,
         "fg_pct": 36.0,
-        "gp": 37
+        "gp": 37,
+        "team_abbr": "CHA"
       },
       "gleague_stats": null
     },
     {
       "id": 1641772,
       "name": "Nae'Qwan Tomlin",
-      "position": "F",
+      "position": "Forward",
       "team": "Cleveland Cavaliers",
       "team_city": "Cleveland",
+      "team_abbr": "CLE",
       "headshot_nba": "https://cdn.nba.com/headshots/nba/latest/1040x760/1641772.png",
       "headshot_local": "images/players/naeqwan-tomlin.png",
       "ig": "nae_ratty",
@@ -113,16 +124,18 @@
         "rpg": 3.1,
         "apg": 0.9,
         "fg_pct": 48.0,
-        "gp": 46
+        "gp": 46,
+        "team_abbr": "CLE"
       },
       "gleague_stats": null
     },
     {
       "id": 1642939,
       "name": "Miles Kelly",
-      "position": "G",
+      "position": "Guard",
       "team": "Dallas Mavericks",
       "team_city": "Dallas",
+      "team_abbr": "DAL",
       "headshot_nba": "https://cdn.nba.com/headshots/nba/latest/1040x760/1642939.png",
       "headshot_local": "images/players/miles-kelly.png",
       "ig": "miles5kelly",
@@ -131,7 +144,8 @@
         "rpg": 1.6,
         "apg": 0.7,
         "fg_pct": 39.4,
-        "gp": 12
+        "gp": 12,
+        "team_abbr": "DAL"
       },
       "gleague_stats": {
         "ppg": 19.9,
@@ -145,19 +159,14 @@
     {
       "id": 1641803,
       "name": "Tristen Newton",
-      "position": "G",
+      "position": "Guard",
       "team": "Houston Rockets",
       "team_city": "Houston",
+      "team_abbr": "HOU",
       "headshot_nba": "https://cdn.nba.com/headshots/nba/latest/1040x760/1641803.png",
       "headshot_local": "images/players/tristen-newton.png",
       "ig": "tristenewton",
-      "stats": {
-        "ppg": 0.4,
-        "rpg": 0.5,
-        "apg": 0.3,
-        "fg_pct": 12.5,
-        "gp": 8
-      },
+      "stats": null,
       "gleague_stats": {
         "ppg": 25.7,
         "rpg": 4.9,
@@ -170,9 +179,10 @@
     {
       "id": 1642352,
       "name": "Keshad Johnson",
-      "position": "F",
+      "position": "Forward",
       "team": "Miami Heat",
       "team_city": "Miami",
+      "team_abbr": "MIA",
       "headshot_nba": "https://cdn.nba.com/headshots/nba/latest/1040x760/1642352.png",
       "headshot_local": "images/players/keshad-johnson.png",
       "ig": "kj_showtime0",
@@ -181,7 +191,8 @@
         "rpg": 1.9,
         "apg": 0.1,
         "fg_pct": 41.3,
-        "gp": 23
+        "gp": 23,
+        "team_abbr": "MIA"
       },
       "gleague_stats": null
     }
