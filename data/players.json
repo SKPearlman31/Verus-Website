@@ -1,5 +1,5 @@
 {
-  "updated": "2026-02-25T06:49:30.446574",
+  "updated": "2026-02-26T06:21:52.983257",
   "season": "2025-26",
   "nba": [
     {
@@ -33,11 +33,11 @@
       "headshot_local": "images/players/dalano-banton.png",
       "ig": "_dubberdon",
       "stats": {
-        "ppg": 2.0,
+        "ppg": 1.5,
         "rpg": 0.3,
-        "apg": 0.7,
-        "fg_pct": 75.0,
-        "gp": 3,
+        "apg": 0.8,
+        "fg_pct": 60.0,
+        "gp": 4,
         "team_abbr": "TOT"
       },
       "gleague_stats": {
@@ -120,11 +120,11 @@
       "headshot_local": "images/players/naeqwan-tomlin.png",
       "ig": "nae_ratty",
       "stats": {
-        "ppg": 6.3,
+        "ppg": 6.2,
         "rpg": 3.0,
         "apg": 0.9,
-        "fg_pct": 47.8,
-        "gp": 47,
+        "fg_pct": 47.4,
+        "gp": 48,
         "team_abbr": "CLE"
       },
       "gleague_stats": null
@@ -168,11 +168,11 @@
       "ig": "tristenewton",
       "stats": null,
       "gleague_stats": {
-        "ppg": 25.6,
+        "ppg": 25.8,
         "rpg": 4.9,
-        "apg": 5.8,
-        "fg_pct": 48.1,
-        "gp": 37,
+        "apg": 5.7,
+        "fg_pct": 48.3,
+        "gp": 38,
         "team_abbr": "TOT"
       }
     },
@@ -263,10 +263,10 @@
       "ig": "djdaishen",
       "stats": {
         "ppg": 22.5,
-        "rpg": 7.1,
+        "rpg": 7.0,
         "apg": 7.1,
-        "fg_pct": 42.6,
-        "gp": 35,
+        "fg_pct": 42.8,
+        "gp": 36,
         "team_abbr": "RGV"
       }
     },
@@ -336,11 +336,11 @@
       "headshot_local": "images/players/devin-brown.png",
       "ig": "_devinbrown",
       "stats": {
-        "ppg": 6.3,
-        "rpg": 3.1,
+        "ppg": 6.5,
+        "rpg": 3.2,
         "apg": 1.6,
-        "fg_pct": 39.7,
-        "gp": 27
+        "fg_pct": 40.7,
+        "gp": 28
       }
     },
     {
@@ -370,11 +370,11 @@
       "headshot_local": "images/players/jaiden-glover-toscano.png",
       "ig": "jglove.11",
       "stats": {
-        "ppg": 15.7,
-        "rpg": 4.7,
+        "ppg": 15.9,
+        "rpg": 4.6,
         "apg": 1.1,
-        "fg_pct": 41.5,
-        "gp": 25
+        "fg_pct": 41.9,
+        "gp": 26
       }
     },
     {
