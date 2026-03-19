@@ -21,6 +21,9 @@ jobs:
         run: pip install nba_api
 
       - name: Run stats updater
+        env:
+          VERUS_SITE_URL: ${{ secrets.VERUS_SITE_URL }}
+          VERUS_STATS_API_KEY: ${{ secrets.VERUS_STATS_API_KEY }}
         run: python3 update_stats.py
 
       - name: Commit and push if changed
