@@ -1,8 +1,169 @@
 // Auto-generated — do not edit manually
 var ROSTER_DATA = {
-  "updated": "2026-03-19T17:17:27.226027",
+  "updated": "2026-03-19T17:22:08.862177",
   "season": "2025-26",
-  "nba": [],
+  "nba": [
+    {
+      "id": 1630228,
+      "name": "Jonathan Kuminga",
+      "position": "Forward",
+      "team": "Atlanta Hawks",
+      "team_city": "Atlanta",
+      "team_abbr": "ATL",
+      "headshot_nba": "https://cdn.nba.com/headshots/nba/latest/1040x760/1630228.png",
+      "headshot_local": "images/players/jonathan-kuminga.png",
+      "ig": "jonathan_kuminga",
+      "stats": {
+        "ppg": 12.1,
+        "rpg": 5.9,
+        "apg": 2.5,
+        "fg_pct": 45.4,
+        "gp": 20,
+        "team_abbr": "ATL"
+      },
+      "gleague_stats": null
+    },
+    {
+      "id": 1631169,
+      "name": "Josh Minott",
+      "position": "Forward",
+      "team": "Brooklyn Nets",
+      "team_city": "Brooklyn",
+      "team_abbr": "BKN",
+      "headshot_nba": "https://cdn.nba.com/headshots/nba/latest/1040x760/1631169.png",
+      "headshot_local": "images/players/josh-minott.png",
+      "ig": "jday.8",
+      "stats": {
+        "ppg": 5.8,
+        "rpg": 3.6,
+        "apg": 1.0,
+        "fg_pct": 50.7,
+        "gp": 33,
+        "team_abbr": "BKN"
+      },
+      "gleague_stats": null
+    },
+    {
+      "id": 1631217,
+      "name": "Moussa Diabate",
+      "position": "Forward",
+      "team": "Charlotte Hornets",
+      "team_city": "Charlotte",
+      "team_abbr": "CHA",
+      "headshot_nba": "https://cdn.nba.com/headshots/nba/latest/1040x760/1631217.png",
+      "headshot_local": "images/players/moussa-diabate.png",
+      "ig": "m0ussadiabate",
+      "stats": {
+        "ppg": 8.1,
+        "rpg": 8.7,
+        "apg": 1.9,
+        "fg_pct": 62.1,
+        "gp": 61,
+        "team_abbr": "CHA"
+      },
+      "gleague_stats": null
+    },
+    {
+      "id": 1630544,
+      "name": "Tre Mann",
+      "position": "Guard",
+      "team": "Charlotte Hornets",
+      "team_city": "Charlotte",
+      "team_abbr": "CHA",
+      "headshot_nba": "https://cdn.nba.com/headshots/nba/latest/1040x760/1630544.png",
+      "headshot_local": "images/players/tre-mann.png",
+      "ig": "treshaunmann",
+      "stats": {
+        "ppg": 6.1,
+        "rpg": 2.0,
+        "apg": 1.9,
+        "fg_pct": 35.7,
+        "gp": 44,
+        "team_abbr": "CHA"
+      },
+      "gleague_stats": null
+    },
+    {
+      "id": 1641772,
+      "name": "Nae'Qwan Tomlin",
+      "position": "Forward",
+      "team": "Cleveland Cavaliers",
+      "team_city": "Cleveland",
+      "team_abbr": "CLE",
+      "headshot_nba": "https://cdn.nba.com/headshots/nba/latest/1040x760/1641772.png",
+      "headshot_local": "images/players/naeqwan-tomlin.png",
+      "ig": "nae_ratty",
+      "stats": {
+        "ppg": 5.9,
+        "rpg": 2.8,
+        "apg": 0.8,
+        "fg_pct": 46.8,
+        "gp": 53,
+        "team_abbr": "CLE"
+      },
+      "gleague_stats": null
+    },
+    {
+      "id": 1641803,
+      "name": "Tristen Newton",
+      "position": "Guard",
+      "team": "Houston Rockets",
+      "team_city": "Houston",
+      "team_abbr": "HOU",
+      "headshot_nba": "https://cdn.nba.com/headshots/nba/latest/1040x760/1641803.png",
+      "headshot_local": "images/players/tristen-newton.png",
+      "ig": "tristenewton",
+      "stats": {
+        "ppg": 0.4,
+        "rpg": 0.5,
+        "apg": 0.3,
+        "fg_pct": 12.5,
+        "gp": 8,
+        "team_abbr": "HOU"
+      },
+      "gleague_stats": null
+    },
+    {
+      "id": 1641771,
+      "name": "Jalen Slawson",
+      "position": "Forward",
+      "team": "Indiana Pacers",
+      "team_city": "Indiana",
+      "team_abbr": "IND",
+      "headshot_nba": "https://cdn.nba.com/headshots/nba/latest/1040x760/1641771.png",
+      "headshot_local": "images/players/jalen-slawson.png",
+      "ig": "jalenslawson",
+      "stats": {
+        "ppg": 7.6,
+        "rpg": 4.6,
+        "apg": 3.0,
+        "fg_pct": 37.5,
+        "gp": 5,
+        "team_abbr": "IND"
+      },
+      "gleague_stats": null
+    },
+    {
+      "id": 1642352,
+      "name": "Keshad Johnson",
+      "position": "Forward",
+      "team": "Miami Heat",
+      "team_city": "Miami",
+      "team_abbr": "MIA",
+      "headshot_nba": "https://cdn.nba.com/headshots/nba/latest/1040x760/1642352.png",
+      "headshot_local": "images/players/keshad-johnson.png",
+      "ig": "kj_showtime0",
+      "stats": {
+        "ppg": 3.8,
+        "rpg": 2.0,
+        "apg": 0.1,
+        "fg_pct": 43.2,
+        "gp": 25,
+        "team_abbr": "MIA"
+      },
+      "gleague_stats": null
+    }
+  ],
   "gleague": [
     {
       "id": 1641746,
