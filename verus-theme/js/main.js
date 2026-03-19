@@ -32,16 +32,6 @@ function igLink(handle){
   return `<a href="https://www.instagram.com/${handle}/" target="_blank" rel="noopener" class="player-ig"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg> @${handle}</a>`;
 }
 
-// ── Resolve a player headshot URL to an absolute URL ──
-function resolveImg(path) {
-  if (!path) return '';
-  // Already absolute URL (CDN fallback)
-  if (path.startsWith('http')) return path;
-  // Prepend theme URL for relative paths
-  var base = (typeof VERUS_WP !== 'undefined' && VERUS_WP.themeUrl) ? VERUS_WP.themeUrl + '/' : '';
-  return base + path;
-}
-
 // ── Build a standard player card (NBA / G-League with stats)
 function buildProCard(p){
   const stats=p.stats||{};
@@ -144,11 +134,17 @@ function buildIntlCard(p){
   return card;
 }
 
+// ── Resolve image paths (prepend themeUrl for WordPress, noop for static)
+function resolveImg(path){
+  if(!path) return '';
+  if(path.startsWith('http')) return path;
+  var base=(typeof VERUS_WP!=='undefined' && VERUS_WP.themeUrl)?VERUS_WP.themeUrl+'/':'';
+  return base+path;
+}
+
 // ── Load roster from ROSTER_DATA (embedded via roster-data.js)
 (function loadRoster(){
-  var data = (typeof VERUS_ROSTER !== 'undefined')
-    ? VERUS_ROSTER
-    : (typeof ROSTER_DATA !== 'undefined' ? ROSTER_DATA : null);
+  var data=typeof VERUS_ROSTER!=='undefined'?VERUS_ROSTER:(typeof ROSTER_DATA!=='undefined'?ROSTER_DATA:null);
   if(!data) return;
 
   var nbaGrid=document.getElementById('nbaRoster');

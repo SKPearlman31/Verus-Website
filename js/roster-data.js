@@ -1,6 +1,6 @@
 // Auto-generated — do not edit manually
 var ROSTER_DATA = {
-  "updated": "2026-03-19T17:26:17.895725",
+  "updated": "2026-03-19T17:43:04.888265",
   "season": "2025-26",
   "nba": [
     {
@@ -220,24 +220,6 @@ var ROSTER_DATA = {
       }
     },
     {
-      "id": 1628995,
-      "name": "Kevin Knox II",
-      "position": "Forward",
-      "team": "Santa Cruz Warriors",
-      "team_abbr": "SCW",
-      "headshot_nba": "https://cdn.nba.com/headshots/nba/latest/1040x760/1628995.png",
-      "headshot_local": "images/players/kevin-knox.png",
-      "ig": "kevinknox",
-      "stats": {
-        "ppg": 21.4,
-        "rpg": 7.7,
-        "apg": 2.1,
-        "fg_pct": 46.5,
-        "gp": 39,
-        "team_abbr": "WCB"
-      }
-    },
-    {
       "id": 1643019,
       "name": "Gabe Madsen",
       "position": "Forward",
@@ -253,24 +235,6 @@ var ROSTER_DATA = {
         "fg_pct": 44.0,
         "gp": 46,
         "team_abbr": "SXF"
-      }
-    },
-    {
-      "id": 203506,
-      "name": "Victor Oladipo",
-      "position": "Guard",
-      "team": "Sioux Falls Skyforce",
-      "team_abbr": "SXF",
-      "headshot_nba": "https://cdn.nba.com/headshots/nba/latest/1040x760/203506.png",
-      "headshot_local": "images/players/victor-oladipo.png",
-      "ig": "victoroladipo",
-      "stats": {
-        "ppg": 14.0,
-        "rpg": 4.4,
-        "apg": 3.8,
-        "fg_pct": 39.4,
-        "gp": 26,
-        "team_abbr": "WIS"
       }
     },
     {
@@ -307,6 +271,42 @@ var ROSTER_DATA = {
         "fg_pct": 43.7,
         "gp": 33,
         "team_abbr": "TEX"
+      }
+    },
+    {
+      "id": 1628995,
+      "name": "Kevin Knox II",
+      "position": "Forward",
+      "team": "Windy City Bulls",
+      "team_abbr": "WCB",
+      "headshot_nba": "https://cdn.nba.com/headshots/nba/latest/1040x760/1628995.png",
+      "headshot_local": "images/players/kevin-knox.png",
+      "ig": "kevinknox",
+      "stats": {
+        "ppg": 21.4,
+        "rpg": 7.7,
+        "apg": 2.1,
+        "fg_pct": 46.5,
+        "gp": 39,
+        "team_abbr": "WCB"
+      }
+    },
+    {
+      "id": 203506,
+      "name": "Victor Oladipo",
+      "position": "Guard",
+      "team": "Wisconsin Herd",
+      "team_abbr": "WIS",
+      "headshot_nba": "https://cdn.nba.com/headshots/nba/latest/1040x760/203506.png",
+      "headshot_local": "images/players/victor-oladipo.png",
+      "ig": "victoroladipo",
+      "stats": {
+        "ppg": 14.0,
+        "rpg": 4.4,
+        "apg": 3.8,
+        "fg_pct": 39.4,
+        "gp": 26,
+        "team_abbr": "WIS"
       }
     }
   ],

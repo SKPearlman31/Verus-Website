@@ -36,7 +36,7 @@ function igLink(handle){
 function buildProCard(p){
   const stats=p.stats||{};
   const photo=p.headshot_local
-    ? `<img src="${p.headshot_local}" alt="${p.name}" onerror="this.onerror=null;this.src='${p.headshot_nba||''}';">`
+    ? `<img src="${resolveImg(p.headshot_local)}" alt="${p.name}" onerror="this.onerror=null;this.src='${p.headshot_nba||''}';">`
     : `<span class="placeholder">V</span>`;
   const team=p.team||'—';
   const showNbaRow=p.stats||p.gleague_stats;
@@ -79,7 +79,7 @@ function buildCollegeCard(p){
     : `this.onerror=null;this.parentElement.innerHTML='<span class=\\'placeholder\\'>V</span>';`;
   const imgClass=isHS?' class="photo-contain"':'';
   const photo=p.headshot_local
-    ? `<img${imgClass} src="${p.headshot_local}" alt="${p.name}" onerror="${fallback}">`
+    ? `<img${imgClass} src="${resolveImg(p.headshot_local)}" alt="${p.name}" onerror="${fallback}">`
     : `<span class="placeholder">V</span>`;
   const detail=isHS
     ? `High School — Class of ${p.class_year||2026}`
@@ -112,7 +112,7 @@ function buildCollegeCard(p){
 function buildIntlCard(p){
   const stats=p.stats||{};
   const photo=p.headshot_local
-    ? `<img src="${p.headshot_local}" alt="${p.name}" onerror="this.onerror=null;this.parentElement.innerHTML='<span class=\\'placeholder\\'>V</span>';">`
+    ? `<img src="${resolveImg(p.headshot_local)}" alt="${p.name}" onerror="this.onerror=null;this.parentElement.innerHTML='<span class=\\'placeholder\\'>V</span>';">`
     : `<span class="placeholder">V</span>`;
   const statsHtml=p.stats
     ? `<div class="player-stats">
@@ -134,9 +134,17 @@ function buildIntlCard(p){
   return card;
 }
 
+// ── Resolve image paths (prepend themeUrl for WordPress, noop for static)
+function resolveImg(path){
+  if(!path) return '';
+  if(path.startsWith('http')) return path;
+  var base=(typeof VERUS_WP!=='undefined' && VERUS_WP.themeUrl)?VERUS_WP.themeUrl+'/':'';
+  return base+path;
+}
+
 // ── Load roster from ROSTER_DATA (embedded via roster-data.js)
 (function loadRoster(){
-  var data=typeof ROSTER_DATA!=='undefined'?ROSTER_DATA:null;
+  var data=typeof VERUS_ROSTER!=='undefined'?VERUS_ROSTER:(typeof ROSTER_DATA!=='undefined'?ROSTER_DATA:null);
   if(!data) return;
 
   var nbaGrid=document.getElementById('nbaRoster');

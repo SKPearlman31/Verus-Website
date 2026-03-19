@@ -73,21 +73,9 @@ GLEAGUE_TEAMS = {
     "TAR": "Raptors 905",
     "TEX": "Texas Legends",
     "WAC": "Capital City Go-Go",
-    "WCB": "Westchester Knicks",
+    "WCB": "Windy City Bulls",
+    "WES": "Westchester Knicks",
     "WIS": "Wisconsin Herd",
-    "WBB": "Windy City Bulls",
-}
-
-# ── NBA → G-League affiliate mapping ─────────────────────────────────────
-NBA_TO_GLEAGUE = {
-    "ATL": "CCG",   "BOS": "MNE",   "BKN": "LIN",   "CHA": "GRN",
-    "CHI": "WBB",   "CLE": "CLF",   "DAL": "TEX",   "DEN": "GRG",
-    "DET": "MHU",   "GSW": "SCW",   "HOU": "RGV",   "IND": "IWA",
-    "LAC": "SBL",   "LAL": "SLC",   "MEM": "MEM",   "MIA": "SXF",
-    "MIL": "WIS",   "MIN": "IWA",   "NOP": "BIR",   "NYK": "WCB",
-    "OKC": "OKL",   "ORL": "OSH",   "PHI": "DEL",   "PHX": "RGV",
-    "POR": "RIP",   "SAC": "SDQ",   "SAS": "MXC",   "TOR": "TAR",
-    "UTA": "SLC",   "WAS": "WAC",
 }
 
 # ───────────────────────────────────────────────────────────────────────────
@@ -171,11 +159,10 @@ def fetch_player_data(entry):
             "team_abbr": reg["TEAM_ABBREVIATION"],
         }
 
-    # Fetch bio (position, display name, current team)
+    # Fetch bio (position, display name)
     bio_url = f"https://stats.nba.com/stats/commonplayerinfo?PlayerID={pid}"
     position = entry.get("position", "Forward")
     display_name = entry["name"]
-    bio_team_abbr = ""
     try:
         bio_resp = requests.get(bio_url, headers=NBA_STATS_HEADERS, timeout=15)
         if bio_resp.status_code == 200:
@@ -186,15 +173,38 @@ def fetch_player_data(entry):
                 display_name = bio["DISPLAY_FIRST_LAST"]
             if bio.get("POSITION"):
                 position = bio["POSITION"]
-            bio_team_abbr = bio.get("TEAM_ABBREVIATION", "")
     except Exception:
         pass  # Use defaults from roster config
 
-    # Use bio's current NBA team to find the correct G-League affiliate,
-    # since stats may show a previous team from before a trade.
-    gl_team_abbr = stats["team_abbr"] if stats else ""
-    if bio_team_abbr:
-        gl_team_abbr = NBA_TO_GLEAGUE.get(bio_team_abbr, gl_team_abbr)
+    # Determine current G-League team:
+    # 1. Use team_override from roster config if set (for trades the API hasn't caught up with)
+    # 2. Otherwise, use game log (most recent game) for the actual current team
+    # 3. Fall back to career stats team abbreviation
+    if entry.get("team_override"):
+        gl_team_abbr = entry["team_override"]
+    else:
+        gl_team_abbr = stats["team_abbr"] if stats else ""
+        try:
+            log_url = (
+                f"https://stats.nba.com/stats/playergamelog"
+                f"?PlayerID={pid}&Season={CURRENT_SEASON}"
+                f"&SeasonType=Regular+Season&LeagueID=20"
+            )
+            log_resp = requests.get(log_url, headers=NBA_STATS_HEADERS, timeout=15)
+            if log_resp.status_code == 200:
+                log_data = log_resp.json()
+                rs = log_data["resultSets"][0]
+                if rs["rowSet"]:
+                    h = rs["headers"]
+                    latest = dict(zip(h, rs["rowSet"][0]))
+                    matchup = latest.get("MATCHUP", "")
+                    # "WBB vs. SCW" or "WBB @ CCG" — first token is the player's team
+                    current_team = matchup.split(" ")[0] if matchup else ""
+                    if current_team:
+                        gl_team_abbr = current_team
+        except Exception:
+            pass
+
     gl_team_name = GLEAGUE_TEAMS.get(gl_team_abbr, gl_team_abbr)
 
     headshot_file = f"{slug(entry['name'])}.png"
@@ -222,9 +232,21 @@ def process_gleague_players():
     print("═══ G-LEAGUE PLAYERS ═══")
     results = []
 
+    def fetch_with_retry(entry, retries=3):
+        for attempt in range(retries):
+            try:
+                return fetch_player_data(entry)
+            except Exception as e:
+                if attempt < retries - 1:
+                    wait = 3 * (attempt + 1)
+                    print(f"  ↻ {entry['name']} retry {attempt + 1}/{retries - 1} in {wait}s...")
+                    time.sleep(wait)
+                else:
+                    raise
+
     # Fetch stats + bio in parallel (4 workers to be respectful)
     with ThreadPoolExecutor(max_workers=4) as executor:
-        futures = {executor.submit(fetch_player_data, e): e for e in GLEAGUE_PLAYERS}
+        futures = {executor.submit(fetch_with_retry, e): e for e in GLEAGUE_PLAYERS}
         for future in futures:
             entry = futures[future]
             try:
@@ -297,6 +319,11 @@ def main():
     if os.path.exists(OUTPUT_PATH):
         with open(OUTPUT_PATH) as f:
             existing = json.load(f)
+
+    # If more than half the players failed (rate limiting), keep existing G-League data
+    if len(gleague) < len(GLEAGUE_PLAYERS) // 2:
+        print(f"\n⚠ Only {len(gleague)}/{len(GLEAGUE_PLAYERS)} players fetched — keeping existing G-League data")
+        gleague = existing.get("gleague", gleague)
 
     # Merge: use new G-League data, preserve everything else
     output = {
