@@ -4,10 +4,12 @@ Verus Basketball — Daily Stats Updater
 Fetches live player stats from the NBA API (NBA + G-League) and ESPN (college),
 downloads headshots, and writes data/players.json for the website.
 
-Run daily via cron:
-  0 8 * * * cd /Users/admin/Desktop/Verus_Website && python3 update_stats.py
+Speed improvements:
+  - Parallel headshot downloads via ThreadPoolExecutor
+  - Parallel ESPN college stats fetching
+  - Reduced sleep between NBA API calls (0.4s)
 
-Or manually:
+Run daily via GitHub Actions or manually:
   python3 update_stats.py
 """
 
@@ -16,6 +18,7 @@ import os
 import ssl
 import time
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 
 from nba_api.stats.endpoints import playercareerstats, commonplayerinfo
@@ -31,29 +34,30 @@ HEADSHOT_DIR = os.path.join(SCRIPT_DIR, "images", "players")
 NBA_HEADSHOT_URL = "https://cdn.nba.com/headshots/nba/latest/1040x760/{player_id}.png"
 ESPN_HEADSHOT_URL = "https://a.espncdn.com/i/headshots/mens-college-basketball/players/full/{espn_id}.png"
 
+API_DELAY = 0.4  # seconds between NBA API calls
+
 # ── NBA Roster ─────────────────────────────────────────────────────────────
 NBA_PLAYERS = [
-    {"id": 1630625, "name": "Dalano Banton",   "ig": "_dubberdon",   "gleague_stats": True},
     {"id": 1631217, "name": "Moussa Diabaté",   "ig": "m0ussadiabate"},
     {"id": 1642352, "name": "Keshad Johnson",   "ig": "kj_showtime0"},
-    {"id": 1642939, "name": "Miles Kelly",       "ig": "miles5kelly",  "gleague_stats": True},
     {"id": 1630228, "name": "Jonathan Kuminga",  "ig": "jonathan_kuminga"},
     {"id": 1630544, "name": "Tre Mann",          "ig": "treshaunmann"},
     {"id": 1631169, "name": "Josh Minott",       "ig": "jday.8"},
     {"id": 1641803, "name": "Tristen Newton",    "ig": "tristenewton", "gleague_stats": True},
     {"id": 1641772, "name": "Nae'Qwan Tomlin",   "ig": "nae_ratty"},
+    {"id": 1641771, "name": "Jalen Slawson",     "ig": "jalenslawson"},
 ]
 
 # ── G-League Roster ────────────────────────────────────────────────────────
-# espn_photo_url = fallback headshot from ESPN for players with placeholder NBA CDN images
 GLEAGUE_PLAYERS = [
+    {"id": 1630625, "name": "Dalano Banton",   "ig": "_dubberdon"},
     {"id": 1630835, "name": "LJ Figueroa",     "ig": "l_comeup",         "espn_photo": "https://a.espncdn.com/i/headshots/mens-college-basketball/players/full/4397125.png"},
     {"id": 1641746, "name": "Coleman Hawkins",  "ig": "colemanhawkins33", "espn_photo": "https://a.espncdn.com/i/headshots/mens-college-basketball/players/full/4432976.png"},
+    {"id": 1642939, "name": "Miles Kelly",      "ig": "miles5kelly"},
     {"id": 1628995, "name": "Kevin Knox",       "ig": "kevinknox"},
     {"id": 1643019, "name": "Gabe Madsen",      "ig": "gabemadsen",      "espn_photo": "https://a.espncdn.com/i/headshots/mens-college-basketball/players/full/4432753.png"},
     {"id": 1630227, "name": "Daishen Nix",      "ig": "djdaishen"},
     {"id": 203506,  "name": "Victor Oladipo",   "ig": "victoroladipo"},
-    {"id": 1641771, "name": "Jalen Slawson",    "ig": "jalenslawson"},
 ]
 
 # ── G-League team full names (NBA API only returns abbreviations) ──────────
@@ -113,13 +117,11 @@ COLLEGE_STATIC_PLAYERS = [
 INTL_PLAYERS = [
     {"name": "Kamar Baldwin",    "position": "Guard",   "team": "FC Bayern Munich",       "league": "BBL / EuroLeague",      "ig": "kamar_baldwin",  "photo": "images/players/kamar-baldwin.png"},
     {"name": "Kaiser Gates",     "position": "Forward", "team": "UCAM Murcia",             "league": "Liga ACB",              "ig": "kaiserg_22",     "photo": "images/players/kaiser-gates.png"},
-    {"name": "Brandon Goodwin",  "position": "Guard",   "team": "Shanghai Sharks",         "league": "CBA",                   "ig": "toughlay",       "photo": "images/players/brandon-goodwin.png"},
     {"name": "Jakarr Sampson",   "position": "Forward", "team": "Zhejiang Guangsha Lions", "league": "CBA",                   "ig": "karrsampson14",  "photo": "images/players/jakarr-sampson.png"},
     {"name": "Kobi Simmons",     "position": "Guard",   "team": "Saski Baskonia",          "league": "Liga ACB / EuroLeague", "ig": "kobi_simmons2",  "photo": "images/players/kobi-simmons.png"},
 ]
 
 # ───────────────────────────────────────────────────────────────────────────
-# SSL context for downloads (macOS certificate issue workaround)
 SSL_CTX = ssl.create_default_context()
 SSL_CTX.check_hostname = False
 SSL_CTX.verify_mode = ssl.CERT_NONE
@@ -136,6 +138,14 @@ def download_file(url, dest):
     except Exception as e:
         print(f"  ⚠ Download failed ({url}): {e}")
         return False
+
+
+def download_headshots_parallel(tasks):
+    """Download multiple headshots in parallel. tasks = list of (url, dest) tuples."""
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        futures = {executor.submit(download_file, url, dest): (url, dest) for url, dest in tasks}
+        for future in as_completed(futures):
+            future.result()
 
 
 def fetch_json(url):
@@ -214,7 +224,6 @@ def fetch_nba_stats(player_id, league_id=None, season=None):
     reg = find_season_row("SeasonTotalsRegularSeason")
     show = find_season_row("SeasonTotalsShowcaseSeason") if league_id == "20" else None
 
-    # Combine regular + showcase if both exist (full G-League season)
     if reg and show:
         reg_gp, show_gp = reg["GP"], show["GP"]
         total_gp = reg_gp + show_gp
@@ -228,7 +237,6 @@ def fetch_nba_stats(player_id, league_id=None, season=None):
                 "team_abbr": reg["TEAM_ABBREVIATION"],
             }
 
-    # Regular season only (fallback)
     if reg:
         return {
             "ppg": round(reg["PTS"], 1),
@@ -246,11 +254,9 @@ def fetch_espn_college_stats(espn_id):
     url = f"https://site.web.api.espn.com/apis/common/v3/sports/basketball/mens-college-basketball/athletes/{espn_id}/stats"
     try:
         data = fetch_json(url)
-        # Season Averages is the first category
         cat = data["categories"][0]
         labels = cat["labels"]
-        # Find the entry matching the current season year (2026 for 2025-26)
-        current_year = int(CURRENT_SEASON.split("-")[0]) + 1  # "2025-26" → 2026
+        current_year = int(CURRENT_SEASON.split("-")[0]) + 1
         for entry in cat.get("statistics", []):
             season = entry.get("season", {})
             if season.get("year") == current_year:
@@ -262,7 +268,6 @@ def fetch_espn_college_stats(espn_id):
                     "fg_pct": float(row.get("FG%", 0)),
                     "gp": int(row.get("GP", 0)),
                 }
-        # Fallback: use the last entry
         if cat.get("statistics"):
             last = cat["statistics"][-1]
             row = dict(zip(labels, last["stats"]))
@@ -283,26 +288,27 @@ def process_nba_players():
     """Fetch and return NBA player data, sorted by team city."""
     print("═══ NBA PLAYERS ═══")
     results = []
+    headshot_tasks = []
+
     for entry in NBA_PLAYERS:
         pid = entry["id"]
         print(f"  {entry['name']} (ID {pid})...")
         try:
-            info = retry(lambda: fetch_nba_player_info(pid))
-            time.sleep(0.6)
-            stats = retry(lambda: fetch_nba_stats(pid))
-            time.sleep(0.6)
+            info = retry(lambda pid=pid: fetch_nba_player_info(pid))
+            time.sleep(API_DELAY)
+            stats = retry(lambda pid=pid: fetch_nba_stats(pid))
+            time.sleep(API_DELAY)
 
-            # Also fetch G-League stats if flagged
             gl_stats = None
             if entry.get("gleague_stats"):
-                gl_stats = retry(lambda: fetch_nba_stats(pid, league_id="20"))
-                time.sleep(0.6)
+                gl_stats = retry(lambda pid=pid: fetch_nba_stats(pid, league_id="20"))
+                time.sleep(API_DELAY)
 
             headshot_file = f"{slug(entry['name'])}.png"
-            download_file(
+            headshot_tasks.append((
                 NBA_HEADSHOT_URL.format(player_id=pid),
                 os.path.join(HEADSHOT_DIR, headshot_file),
-            )
+            ))
 
             player = {
                 "id": pid,
@@ -324,7 +330,10 @@ def process_nba_players():
         except Exception as e:
             print(f"    ✗ Error: {e}")
 
-    # Sort by team city alphabetically
+    # Download all headshots in parallel (instead of one at a time)
+    print("  Downloading headshots...")
+    download_headshots_parallel(headshot_tasks)
+
     results.sort(key=lambda p: (p.get("team_city") or "zzz").lower())
     return results
 
@@ -333,36 +342,28 @@ def process_gleague_players():
     """Fetch and return G-League player data, sorted by team city."""
     print("\n═══ G-LEAGUE PLAYERS ═══")
     results = []
+    headshot_tasks = []
+
     for entry in GLEAGUE_PLAYERS:
         pid = entry["id"]
         print(f"  {entry['name']} (ID {pid})...")
         try:
-            # Get bio info (may fail for G-League-only players)
             try:
-                info = retry(lambda: fetch_nba_player_info(pid))
-                time.sleep(0.6)
+                info = retry(lambda pid=pid: fetch_nba_player_info(pid))
+                time.sleep(API_DELAY)
             except Exception:
                 info = None
 
-            # Get G-League stats (league_id='20')
             season_override = entry.get("season")
-            stats = retry(lambda: fetch_nba_stats(pid, league_id="20", season=season_override))
-            time.sleep(0.6)
+            stats = retry(lambda pid=pid: fetch_nba_stats(pid, league_id="20", season=season_override))
+            time.sleep(API_DELAY)
 
-            # Resolve G-League team name from abbreviation
             gl_team_abbr = stats["team_abbr"] if stats else ""
             gl_team_name = GLEAGUE_TEAMS.get(gl_team_abbr, entry.get("team_fallback", gl_team_abbr))
 
             headshot_file = f"{slug(entry['name'])}.png"
-            # Try NBA CDN first; if an ESPN fallback is configured, also download that
             nba_url = NBA_HEADSHOT_URL.format(player_id=pid)
-            download_file(nba_url, os.path.join(HEADSHOT_DIR, headshot_file))
-            espn_photo = entry.get("espn_photo")
-            if espn_photo:
-                dest = os.path.join(HEADSHOT_DIR, headshot_file)
-                # If the NBA CDN file is suspiciously small (<50KB), replace with ESPN photo
-                if os.path.getsize(dest) < 50_000:
-                    download_file(espn_photo, dest)
+            headshot_tasks.append((nba_url, os.path.join(HEADSHOT_DIR, headshot_file)))
 
             display_name = entry["name"]
             position = entry.get("position", "Forward")
@@ -380,6 +381,7 @@ def process_gleague_players():
                 "headshot_local": f"images/players/{headshot_file}",
                 "ig": entry.get("ig", ""),
                 "stats": stats,
+                "_espn_photo": entry.get("espn_photo"),
             }
             results.append(player)
             stat_line = f"{stats['ppg']} PPG | {stats['rpg']} RPG | {stats['apg']} APG" if stats else "No current stats"
@@ -387,47 +389,76 @@ def process_gleague_players():
         except Exception as e:
             print(f"    ✗ Error: {e}")
 
-    # Sort by team name (city) alphabetically
+    # Download all headshots in parallel
+    print("  Downloading headshots...")
+    download_headshots_parallel(headshot_tasks)
+
+    # Post-download: check for ESPN fallback replacements
+    for player in results:
+        espn_photo = player.pop("_espn_photo", None)
+        if espn_photo:
+            headshot_file = f"{slug(player['name'])}.png"
+            dest = os.path.join(HEADSHOT_DIR, headshot_file)
+            try:
+                if os.path.exists(dest) and os.path.getsize(dest) < 50_000:
+                    download_file(espn_photo, dest)
+            except Exception:
+                pass
+
     results.sort(key=lambda p: (p.get("team") or "zzz").lower())
     return results
 
 
 def process_college_players():
-    """Fetch and return college player data, sorted by school."""
+    """Fetch and return college player data. ESPN stats fetched in parallel."""
     print("\n═══ COLLEGE & NIL PLAYERS ═══")
     results = []
 
+    # Fetch all ESPN stats in parallel
+    espn_stats = {}
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        futures = {
+            executor.submit(fetch_espn_college_stats, entry["espn_id"]): entry
+            for entry in COLLEGE_PLAYERS
+        }
+        for future in as_completed(futures):
+            entry = futures[future]
+            try:
+                espn_stats[entry["espn_id"]] = future.result()
+            except Exception as e:
+                print(f"  ⚠ {entry['name']}: {e}")
+                espn_stats[entry["espn_id"]] = None
+
+    # Download college headshots in parallel
+    headshot_tasks = [
+        (ESPN_HEADSHOT_URL.format(espn_id=entry["espn_id"]),
+         os.path.join(HEADSHOT_DIR, f"{slug(entry['name'])}.png"))
+        for entry in COLLEGE_PLAYERS
+    ]
+    download_headshots_parallel(headshot_tasks)
+
     for entry in COLLEGE_PLAYERS:
         eid = entry["espn_id"]
-        print(f"  {entry['name']} ({entry['school']})...")
-        try:
-            stats = fetch_espn_college_stats(eid)
-            time.sleep(0.6)
+        stats = espn_stats.get(eid)
+        headshot_file = f"{slug(entry['name'])}.png"
 
-            headshot_file = f"{slug(entry['name'])}.png"
-            headshot_url = ESPN_HEADSHOT_URL.format(espn_id=eid)
-            download_file(headshot_url, os.path.join(HEADSHOT_DIR, headshot_file))
+        player = {
+            "name": entry["name"],
+            "position": entry["position"],
+            "school": entry["school"],
+            "type": "college",
+            "espn_id": eid,
+            "headshot_espn": ESPN_HEADSHOT_URL.format(espn_id=eid),
+            "headshot_local": f"images/players/{headshot_file}",
+            "ig": entry.get("ig", ""),
+            "stats": stats,
+        }
+        results.append(player)
+        if stats:
+            print(f"  {entry['name']} → {entry['school']} | {stats['ppg']} PPG | {stats['rpg']} RPG | {stats['apg']} APG")
+        else:
+            print(f"  {entry['name']} → {entry['school']} | No stats available")
 
-            player = {
-                "name": entry["name"],
-                "position": entry["position"],
-                "school": entry["school"],
-                "type": "college",
-                "espn_id": eid,
-                "headshot_espn": headshot_url,
-                "headshot_local": f"images/players/{headshot_file}",
-                "ig": entry.get("ig", ""),
-                "stats": stats,
-            }
-            results.append(player)
-            if stats:
-                print(f"    → {entry['position']} — {entry['school']} | {stats['ppg']} PPG | {stats['rpg']} RPG | {stats['apg']} APG")
-            else:
-                print(f"    → {entry['position']} — {entry['school']} | No stats available")
-        except Exception as e:
-            print(f"    ✗ Error: {e}")
-
-    # High school commits — no stats, photo from 247sports
     print("\n  ── High School Commits ──")
     for entry in HS_PLAYERS:
         print(f"  {entry['name']} → {entry['commitment']} commit")
@@ -444,7 +475,6 @@ def process_college_players():
         }
         results.append(player)
 
-    # Static college/NIL players (no ESPN stats)
     for entry in COLLEGE_STATIC_PLAYERS:
         print(f"  {entry['name']} (static)")
         player = {
@@ -458,7 +488,6 @@ def process_college_players():
         }
         results.append(player)
 
-    # Sort: college players by school, then HS commits by school
     results.sort(key=lambda p: (
         0 if p["type"] == "college" else 1,
         (p.get("school") or "zzz").lower(),
@@ -482,7 +511,6 @@ def process_intl_players():
             "stats": entry.get("stats"),
         }
         results.append(player)
-    # Sort alphabetically by team name
     results.sort(key=lambda p: p["team"].lower())
     return results
 
@@ -505,7 +533,7 @@ def push_to_wordpress(data):
         headers={
             "Content-Type": "application/json",
             "X-Verus-Key": api_key,
-            "User-Agent": "VerusStatsUpdater/1.0",
+            "User-Agent": "VerusStatsUpdater/2.0",
         },
         method="POST",
     )
@@ -519,6 +547,7 @@ def push_to_wordpress(data):
 
 
 def main():
+    start = time.time()
     print(f"Verus Stats Updater — {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     print(f"Season: {CURRENT_SEASON}\n")
 
@@ -542,7 +571,6 @@ def main():
     with open(OUTPUT_PATH, "w") as f:
         json.dump(output, f, indent=2, ensure_ascii=False)
 
-    # Also write an inline JS file so the site works without a server (file:// protocol)
     with open(OUTPUT_JS_PATH, "w") as f:
         f.write("// Auto-generated by update_stats.py — do not edit manually\n")
         f.write("var ROSTER_DATA = ")
@@ -550,11 +578,12 @@ def main():
         f.write(";\n")
 
     total = len(nba) + len(gleague) + len(college) + len(intl)
+    elapsed = time.time() - start
     print(f"\nWrote {OUTPUT_PATH}")
     print(f"Wrote {OUTPUT_JS_PATH}")
     print(f"Done — {total} players ({len(nba)} NBA, {len(gleague)} G-League, {len(college)} College/NIL, {len(intl)} Intl)")
+    print(f"Completed in {elapsed:.1f}s")
 
-    # Push to WordPress if credentials are available
     push_to_wordpress(output)
 
 

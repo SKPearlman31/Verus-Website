@@ -2,11 +2,57 @@ name: Update Player Stats
 
 on:
   schedule:
-    - cron: '0 12 * * *'  # 7 AM EST (UTC-5) = 12:00 UTC
-  workflow_dispatch:       # Allow manual runs from GitHub UI
+    - cron: '0 10 * * *'   # 5 AM EST (UTC-5) — NBA + College + Intl via ESPN
+    - cron: '0 11 * * *'   # 6 AM EST (UTC-5) — G-League via nba_api
+  workflow_dispatch:
+    inputs:
+      updater:
+        description: 'Which updater to run'
+        required: true
+        default: 'both'
+        type: choice
+        options:
+          - both
+          - nba
+          - gleague
 
 jobs:
-  update-stats:
+  update-nba:
+    if: >-
+      github.event_name == 'workflow_dispatch' && (inputs.updater == 'nba' || inputs.updater == 'both') ||
+      github.event_name == 'schedule' && github.event.schedule == '0 10 * * *'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run NBA stats updater (ESPN)
+        env:
+          VERUS_SITE_URL: ${{ secrets.VERUS_SITE_URL }}
+          VERUS_STATS_API_KEY: ${{ secrets.VERUS_STATS_API_KEY }}
+        run: python3 update_nba_stats.py
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/players.json js/roster-data.js images/players/
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Auto-update NBA stats $(date -u +%Y-%m-%d)"
+            git push
+          fi
+
+  update-gleague:
+    if: >-
+      github.event_name == 'workflow_dispatch' && (inputs.updater == 'gleague' || inputs.updater == 'both') ||
+      github.event_name == 'schedule' && github.event.schedule == '0 11 * * *'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,20 +66,21 @@ jobs:
       - name: Install dependencies
         run: pip install nba_api
 
-      - name: Run stats updater
+      - name: Run G-League stats updater (nba_api)
         env:
           VERUS_SITE_URL: ${{ secrets.VERUS_SITE_URL }}
           VERUS_STATS_API_KEY: ${{ secrets.VERUS_STATS_API_KEY }}
-        run: python3 update_stats.py
+        run: python3 update_gleague_stats.py
 
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase  # in case NBA job pushed first
           git add data/players.json js/roster-data.js images/players/
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Auto-update player stats $(date -u +%Y-%m-%d)"
+            git commit -m "Auto-update G-League stats $(date -u +%Y-%m-%d)"
             git push
           fi
