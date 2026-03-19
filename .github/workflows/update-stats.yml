@@ -3,7 +3,7 @@ name: Update Player Stats
 on:
   schedule:
     - cron: '0 10 * * *'   # 5 AM EST (UTC-5) — NBA + College + Intl via ESPN
-    - cron: '0 11 * * *'   # 6 AM EST (UTC-5) — G-League via nba_api
+    - cron: '0 11 * * *'   # 6 AM EST (UTC-5) — G-League via stats.nba.com
   workflow_dispatch:
     inputs:
       updater:
@@ -60,9 +60,9 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install nba_api
+        run: pip install requests
 
-      - name: Run G-League stats updater (nba_api)
+      - name: Run G-League stats updater
         env:
           VERUS_SITE_URL: ${{ secrets.VERUS_SITE_URL }}
           VERUS_STATS_API_KEY: ${{ secrets.VERUS_STATS_API_KEY }}

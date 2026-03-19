@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Verus Basketball — G-League Stats Updater (nba_api)
-Fetches G-League player stats from the NBA API.
+Verus Basketball — G-League Stats Updater
+Fetches G-League player stats directly from stats.nba.com (parallel requests).
 
 Runs daily at 6 AM EST via GitHub Actions (1 hour after NBA updater).
 Only updates the G-League section of players.json; preserves NBA/college/intl data.
@@ -12,10 +12,10 @@ import os
 import ssl
 import time
 import urllib.request
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 
-from nba_api.stats.endpoints import playercareerstats, commonplayerinfo
+import requests
 
 # ── Configuration ──────────────────────────────────────────────────────────
 CURRENT_SEASON = "2025-26"
@@ -27,7 +27,12 @@ HEADSHOT_DIR = os.path.join(SCRIPT_DIR, "images", "players")
 
 NBA_HEADSHOT_URL = "https://cdn.nba.com/headshots/nba/latest/1040x760/{player_id}.png"
 
-API_DELAY = 0.5  # seconds between NBA API calls
+NBA_STATS_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
+    "Referer": "https://www.nba.com/",
+    "Origin": "https://www.nba.com",
+    "Accept": "application/json",
+}
 
 # ── G-League Roster ────────────────────────────────────────────────────────
 GLEAGUE_PLAYERS = [
@@ -102,57 +107,41 @@ def slug(name):
     )
 
 
-def retry(fn, retries=3, delay=2):
-    for attempt in range(retries):
-        try:
-            return fn()
-        except Exception as e:
-            if attempt < retries - 1:
-                wait = delay * (attempt + 1)
-                print(f"    ↻ Retry {attempt + 1}/{retries - 1} in {wait}s... ({e})")
-                time.sleep(wait)
-            else:
-                raise
+def fetch_player_data(entry):
+    """Fetch G-League stats and bio for a single player via stats.nba.com."""
+    pid = entry["id"]
 
+    # Fetch career stats (G-League = LeagueID 20)
+    stats_url = (
+        f"https://stats.nba.com/stats/playercareerstats"
+        f"?PlayerID={pid}&PerMode=PerGame&LeagueID=20"
+    )
+    stats_resp = requests.get(stats_url, headers=NBA_STATS_HEADERS, timeout=30)
+    stats_resp.raise_for_status()
+    stats_data = stats_resp.json()
 
-def fetch_nba_player_info(player_id):
-    """Get player bio from CommonPlayerInfo."""
-    info = commonplayerinfo.CommonPlayerInfo(player_id=str(player_id), timeout=60)
-    rs = info.get_dict()["resultSets"]
-    bio = dict(zip(rs[0]["headers"], rs[0]["rowSet"][0]))
-    return {
-        "display_name": bio["DISPLAY_FIRST_LAST"],
-        "position": bio.get("POSITION", ""),
-    }
+    # Find current-season rows for regular and showcase
+    reg = show = None
+    for rs in stats_data["resultSets"]:
+        if not rs["rowSet"]:
+            continue
+        headers = rs["headers"]
+        for row in rs["rowSet"]:
+            r = dict(zip(headers, row))
+            if r.get("SEASON_ID") != CURRENT_SEASON:
+                continue
+            if rs["name"] == "SeasonTotalsRegularSeason":
+                reg = r
+            elif rs["name"] == "SeasonTotalsShowcaseSeason":
+                show = r
 
-
-def fetch_gleague_stats(player_id):
-    """Get G-League per-game averages. Combines regular + showcase seasons."""
-    kwargs = {"player_id": str(player_id), "per_mode36": "PerGame", "timeout": 60, "league_id_nullable": "20"}
-    career = playercareerstats.PlayerCareerStats(**kwargs)
-    result_sets = career.get_dict()["resultSets"]
-
-    def find_season_row(rs_name):
-        for rs in result_sets:
-            if rs["name"] == rs_name:
-                headers = rs["headers"]
-                rows = [
-                    dict(zip(headers, row))
-                    for row in rs["rowSet"]
-                    if row[headers.index("SEASON_ID")] == CURRENT_SEASON
-                ]
-                if rows:
-                    return rows[-1]
-        return None
-
-    reg = find_season_row("SeasonTotalsRegularSeason")
-    show = find_season_row("SeasonTotalsShowcaseSeason")
-
+    # Combine regular + showcase (GP-weighted averages)
+    stats = None
     if reg and show:
         reg_gp, show_gp = reg["GP"], show["GP"]
         total_gp = reg_gp + show_gp
         if total_gp > 0:
-            return {
+            stats = {
                 "ppg": round((reg["PTS"] * reg_gp + show["PTS"] * show_gp) / total_gp, 1),
                 "rpg": round((reg["REB"] * reg_gp + show["REB"] * show_gp) / total_gp, 1),
                 "apg": round((reg["AST"] * reg_gp + show["AST"] * show_gp) / total_gp, 1),
@@ -160,9 +149,8 @@ def fetch_gleague_stats(player_id):
                 "gp": total_gp,
                 "team_abbr": reg["TEAM_ABBREVIATION"],
             }
-
-    if reg:
-        return {
+    elif reg:
+        stats = {
             "ppg": round(reg["PTS"], 1),
             "rpg": round(reg["REB"], 1),
             "apg": round(reg["AST"], 1),
@@ -170,62 +158,70 @@ def fetch_gleague_stats(player_id):
             "gp": reg["GP"],
             "team_abbr": reg["TEAM_ABBREVIATION"],
         }
-    return None
+
+    # Fetch bio (position, display name)
+    bio_url = f"https://stats.nba.com/stats/commonplayerinfo?PlayerID={pid}"
+    position = entry.get("position", "Forward")
+    display_name = entry["name"]
+    try:
+        bio_resp = requests.get(bio_url, headers=NBA_STATS_HEADERS, timeout=15)
+        if bio_resp.status_code == 200:
+            bio_data = bio_resp.json()
+            rs = bio_data["resultSets"][0]
+            bio = dict(zip(rs["headers"], rs["rowSet"][0]))
+            if bio.get("DISPLAY_FIRST_LAST", "").strip():
+                display_name = bio["DISPLAY_FIRST_LAST"]
+            if bio.get("POSITION"):
+                position = bio["POSITION"]
+    except Exception:
+        pass  # Use defaults from roster config
+
+    gl_team_abbr = stats["team_abbr"] if stats else ""
+    gl_team_name = GLEAGUE_TEAMS.get(gl_team_abbr, gl_team_abbr)
+
+    headshot_file = f"{slug(entry['name'])}.png"
+
+    player = {
+        "id": pid,
+        "name": display_name,
+        "position": position,
+        "team": gl_team_name,
+        "team_abbr": gl_team_abbr,
+        "headshot_nba": NBA_HEADSHOT_URL.format(player_id=pid),
+        "headshot_local": f"images/players/{headshot_file}",
+        "ig": entry.get("ig", ""),
+        "stats": stats,
+        "_espn_photo": entry.get("espn_photo"),
+    }
+
+    stat_line = f"{stats['ppg']} PPG | {stats['rpg']} RPG | {stats['apg']} APG" if stats else "No stats"
+    print(f"  {display_name} — {position} — {gl_team_name} | {stat_line}")
+    return player
 
 
 def process_gleague_players():
-    """Fetch G-League player data sequentially (rate-limited API)."""
+    """Fetch all G-League player data in parallel."""
     print("═══ G-LEAGUE PLAYERS ═══")
     results = []
-    headshot_tasks = []
 
-    for entry in GLEAGUE_PLAYERS:
-        pid = entry["id"]
-        print(f"  {entry['name']} (ID {pid})...")
-        try:
-            # Get bio info
+    # Fetch stats + bio in parallel (4 workers to be respectful)
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        futures = {executor.submit(fetch_player_data, e): e for e in GLEAGUE_PLAYERS}
+        for future in futures:
+            entry = futures[future]
             try:
-                info = retry(lambda pid=pid: fetch_nba_player_info(pid))
-                time.sleep(API_DELAY)
-            except Exception:
-                info = None
-
-            # Get G-League stats
-            stats = retry(lambda pid=pid: fetch_gleague_stats(pid))
-            time.sleep(API_DELAY)
-
-            gl_team_abbr = stats["team_abbr"] if stats else ""
-            gl_team_name = GLEAGUE_TEAMS.get(gl_team_abbr, gl_team_abbr)
-
-            display_name = entry["name"]
-            position = entry.get("position", "Forward")
-            if info:
-                display_name = info["display_name"] if info["display_name"].strip() else entry["name"]
-                position = info["position"] or position
-
-            headshot_file = f"{slug(entry['name'])}.png"
-            nba_url = NBA_HEADSHOT_URL.format(player_id=pid)
-            headshot_tasks.append((nba_url, os.path.join(HEADSHOT_DIR, headshot_file)))
-
-            player = {
-                "id": pid,
-                "name": display_name,
-                "position": position,
-                "team": gl_team_name,
-                "team_abbr": gl_team_abbr,
-                "headshot_nba": nba_url,
-                "headshot_local": f"images/players/{headshot_file}",
-                "ig": entry.get("ig", ""),
-                "stats": stats,
-                "_espn_photo": entry.get("espn_photo"),
-            }
-            results.append(player)
-            stat_line = f"{stats['ppg']} PPG | {stats['rpg']} RPG | {stats['apg']} APG" if stats else "No stats"
-            print(f"    → {position} — {gl_team_name} | {stat_line}")
-        except Exception as e:
-            print(f"    ✗ Error: {e}")
+                player = future.result()
+                results.append(player)
+            except Exception as e:
+                print(f"  ✗ {entry['name']}: {e}")
 
     # Download headshots in parallel
+    headshot_tasks = []
+    for player in results:
+        headshot_file = f"{slug(player['name'])}.png"
+        nba_url = NBA_HEADSHOT_URL.format(player_id=player["id"])
+        headshot_tasks.append((nba_url, os.path.join(HEADSHOT_DIR, headshot_file)))
+
     print("  Downloading headshots...")
     with ThreadPoolExecutor(max_workers=8) as executor:
         list(executor.map(lambda t: download_file(*t), headshot_tasks))
