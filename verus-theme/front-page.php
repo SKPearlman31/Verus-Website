@@ -433,7 +433,7 @@
       <p style="color:var(--gray-light)">Thank you for reaching out. We'll be in touch soon.</p>
     </div>
     <!-- IMPORTANT: Replace YOUR_EMAIL_HERE above with the actual recipient email address -->
-    <form id="contactForm" action="https://formsubmit.co/YOUR_EMAIL_HERE" method="POST">
+    <form id="contactForm" action="https://formsubmit.co/admin@verusbasketball.com" method="POST">
       <!-- ═══ CONTACT EMAIL SETUP ═══
            Replace YOUR_EMAIL_HERE in the form action with your actual email address.
            FormSubmit.co will forward submissions to that email for free.
