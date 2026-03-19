@@ -78,6 +78,18 @@ GLEAGUE_TEAMS = {
     "WBB": "Windy City Bulls",
 }
 
+# ── NBA → G-League affiliate mapping ─────────────────────────────────────
+NBA_TO_GLEAGUE = {
+    "ATL": "CCG",   "BOS": "MNE",   "BKN": "LIN",   "CHA": "GRN",
+    "CHI": "WBB",   "CLE": "CLF",   "DAL": "TEX",   "DEN": "GRG",
+    "DET": "MHU",   "GSW": "SCW",   "HOU": "RGV",   "IND": "IWA",
+    "LAC": "SBL",   "LAL": "SLC",   "MEM": "MEM",   "MIA": "SXF",
+    "MIL": "WIS",   "MIN": "IWA",   "NOP": "BIR",   "NYK": "WCB",
+    "OKC": "OKL",   "ORL": "OSH",   "PHI": "DEL",   "PHX": "RGV",
+    "POR": "RIP",   "SAC": "SDQ",   "SAS": "MXC",   "TOR": "TAR",
+    "UTA": "SLC",   "WAS": "WAC",
+}
+
 # ───────────────────────────────────────────────────────────────────────────
 SSL_CTX = ssl.create_default_context()
 SSL_CTX.check_hostname = False
@@ -159,10 +171,11 @@ def fetch_player_data(entry):
             "team_abbr": reg["TEAM_ABBREVIATION"],
         }
 
-    # Fetch bio (position, display name)
+    # Fetch bio (position, display name, current team)
     bio_url = f"https://stats.nba.com/stats/commonplayerinfo?PlayerID={pid}"
     position = entry.get("position", "Forward")
     display_name = entry["name"]
+    bio_team_abbr = ""
     try:
         bio_resp = requests.get(bio_url, headers=NBA_STATS_HEADERS, timeout=15)
         if bio_resp.status_code == 200:
@@ -173,10 +186,15 @@ def fetch_player_data(entry):
                 display_name = bio["DISPLAY_FIRST_LAST"]
             if bio.get("POSITION"):
                 position = bio["POSITION"]
+            bio_team_abbr = bio.get("TEAM_ABBREVIATION", "")
     except Exception:
         pass  # Use defaults from roster config
 
+    # Use bio's current NBA team to find the correct G-League affiliate,
+    # since stats may show a previous team from before a trade.
     gl_team_abbr = stats["team_abbr"] if stats else ""
+    if bio_team_abbr:
+        gl_team_abbr = NBA_TO_GLEAGUE.get(bio_team_abbr, gl_team_abbr)
     gl_team_name = GLEAGUE_TEAMS.get(gl_team_abbr, gl_team_abbr)
 
     headshot_file = f"{slug(entry['name'])}.png"
