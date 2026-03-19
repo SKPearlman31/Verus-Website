@@ -6,9 +6,9 @@
   <div class="hero-bg"></div>
   <div class="hero-video-bg">
     <?php if (VERUS_VIDEO_URL): ?>
-    <video autoplay muted loop playsinline>
-      <source src="<?php echo esc_url(VERUS_VIDEO_URL); ?>" type="video/mp4">
-    </video>
+    <iframe src="https://player.vimeo.com/video/<?php echo esc_attr(VERUS_VIDEO_URL); ?>?background=1&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+            frameborder="0" allow="autoplay; fullscreen" allowfullscreen
+            style="position:absolute;top:50%;left:50%;width:177.78vh;height:100vh;min-width:100%;min-height:56.25vw;transform:translate(-50%,-50%)"></iframe>
     <?php endif; ?>
     <div class="hero-video-overlay"></div>
   </div>
@@ -317,11 +317,11 @@
   </div>
 
   <div class="expertise-video reveal">
-    <div class="video-wrapper">
+    <div class="video-wrapper" style="padding-bottom:56.25%">
       <?php if (VERUS_VIDEO_URL): ?>
-      <video controls playsinline>
-        <source src="<?php echo esc_url(VERUS_VIDEO_URL); ?>" type="video/mp4">
-      </video>
+      <iframe src="https://player.vimeo.com/video/<?php echo esc_attr(VERUS_VIDEO_URL); ?>?title=0&byline=0&portrait=0"
+              frameborder="0" allow="autoplay; fullscreen" allowfullscreen
+              style="width:100%;height:100%;position:absolute;top:0;left:0"></iframe>
       <?php endif; ?>
     </div>
   </div>

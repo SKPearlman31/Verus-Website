@@ -9,8 +9,8 @@ add_action('after_setup_theme', function () {
     add_theme_support('html5', ['search-form', 'gallery', 'caption']);
 });
 
-// ── Video URL (change this after uploading your video) ───────────────────
-define('VERUS_VIDEO_URL', ''); // Set to full URL of VerusHolder_2.m4v after upload
+// ── Vimeo Video ID (change this to your Vimeo video ID) ──────────────────
+define('VERUS_VIDEO_URL', '1175204118'); // Vimeo video ID from https://vimeo.com/1175204118
 
 // ── Enqueue Styles & Scripts ─────────────────────────────────────────────
 add_action('wp_enqueue_scripts', function () {
