@@ -487,6 +487,37 @@ def process_intl_players():
     return results
 
 
+def push_to_wordpress(data):
+    """POST stats data to the WordPress REST API. Non-fatal on failure."""
+    site_url = os.environ.get("VERUS_SITE_URL", "").rstrip("/")
+    api_key = os.environ.get("VERUS_STATS_API_KEY", "")
+
+    if not site_url or not api_key:
+        print("\n⚠ VERUS_SITE_URL or VERUS_STATS_API_KEY not set — skipping WordPress push")
+        return
+
+    endpoint = f"{site_url}/wp-json/verus/v1/update-stats"
+    payload = json.dumps(data, ensure_ascii=False).encode("utf-8")
+
+    req = urllib.request.Request(
+        endpoint,
+        data=payload,
+        headers={
+            "Content-Type": "application/json",
+            "X-Verus-Key": api_key,
+            "User-Agent": "VerusStatsUpdater/1.0",
+        },
+        method="POST",
+    )
+
+    try:
+        with urllib.request.urlopen(req, context=SSL_CTX, timeout=30) as resp:
+            result = json.loads(resp.read().decode())
+            print(f"\n✓ WordPress updated: {result.get('message', 'OK')}")
+    except Exception as e:
+        print(f"\n⚠ WordPress push failed (non-fatal): {e}")
+
+
 def main():
     print(f"Verus Stats Updater — {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     print(f"Season: {CURRENT_SEASON}\n")
@@ -522,6 +553,9 @@ def main():
     print(f"\nWrote {OUTPUT_PATH}")
     print(f"Wrote {OUTPUT_JS_PATH}")
     print(f"Done — {total} players ({len(nba)} NBA, {len(gleague)} G-League, {len(college)} College/NIL, {len(intl)} Intl)")
+
+    # Push to WordPress if credentials are available
+    push_to_wordpress(output)
 
 
 if __name__ == "__main__":
