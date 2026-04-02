@@ -43,7 +43,6 @@ GLEAGUE_PLAYERS = [
     {"id": 1628995, "name": "Kevin Knox",       "ig": "kevinknox"},
     {"id": 1643019, "name": "Gabe Madsen",      "ig": "gabemadsen",      "espn_photo": "https://a.espncdn.com/i/headshots/mens-college-basketball/players/full/4432753.png"},
     {"id": 1630227, "name": "Daishen Nix",      "ig": "djdaishen"},
-    {"id": 203506,  "name": "Victor Oladipo",   "ig": "victoroladipo"},
 ]
 
 # ── G-League team full names ──────────────────────────────────────────────

@@ -290,24 +290,6 @@ var ROSTER_DATA = {
         "gp": 39,
         "team_abbr": "WCB"
       }
-    },
-    {
-      "id": 203506,
-      "name": "Victor Oladipo",
-      "position": "Guard",
-      "team": "Wisconsin Herd",
-      "team_abbr": "WIS",
-      "headshot_nba": "https://cdn.nba.com/headshots/nba/latest/1040x760/203506.png",
-      "headshot_local": "images/players/victor-oladipo.png",
-      "ig": "victoroladipo",
-      "stats": {
-        "ppg": 14.0,
-        "rpg": 4.4,
-        "apg": 3.8,
-        "fg_pct": 39.4,
-        "gp": 26,
-        "team_abbr": "WIS"
-      }
     }
   ],
   "college": [
@@ -391,10 +373,10 @@ var ROSTER_DATA = {
     {
       "name": "Kayden Allen",
       "position": "Guard",
-      "school": "Cincinnati Commit",
+      "school": "UNCOMMITTED",
       "type": "highschool",
       "class_year": 2026,
-      "commitment": "Cincinnati",
+      "commitment": "UNCOMMITTED",
       "headshot_local": "images/players/kayden-allen.jpg",
       "ig": "kaydenallennn",
       "stats": null

@@ -259,50 +259,6 @@
         </div>
       </div>
     </div>
-    <div class="card-container reveal" onclick="this.classList.toggle('flipped')">
-      <div class="card-inner">
-        <div class="card-front">
-          <div class="family-avatar"><img src="<?php echo esc_url($t); ?>/images/team/kshaun-daley.png" alt="Kshaun Daley"></div>
-          <div class="family-name">Kshaun Daley</div>
-          <div class="family-role">Certified FIBA Agent</div>
-          <div class="flip-hint">Click to read more →</div>
-        </div>
-        <div class="card-back">
-          <div class="card-back-header">
-            <div class="card-back-avatar"><img src="<?php echo esc_url($t); ?>/images/team/kshaun-daley.png" alt="Kshaun Daley"></div>
-            <div>
-              <div class="card-back-name">Kshaun Daley</div>
-              <div class="card-back-role">Certified FIBA Agent</div>
-            </div>
-          </div>
-          <div class="card-back-bio">Kshaun "K" Daley is an alumni of the University of West Alabama, where he played the final 2 years of his collegiate career. A sports management major, Kshaun began coaching at the AAU travel ball level. As both coach and director, he signed a Grassroots sponsorship deal with FILA at age 24 making him one of the youngest directors in America to ever do so. Soon after, joining the Atlanta Celtics on the Adidas travel circuit where he produced multiple McDonald's All Americans, as well as professional talent on both the international and NBA level. With extensive experience in both development and management, Kshaun joined our team in 2018 and became a licensed FIBA agent in 2019. Kshaun is a "players agent" with a personal approach that allows for growth and maximization of opportunity as both a personality and a player.</div>
-          <div class="card-back-hint">Click to flip back</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card-container reveal" onclick="this.classList.toggle('flipped')">
-      <div class="card-inner">
-        <div class="card-front">
-          <div class="family-avatar"><img src="<?php echo esc_url($t); ?>/images/team/horace-neysmith.png" alt="Horace Neysmith"></div>
-          <div class="family-name">Horace Neysmith</div>
-          <div class="family-role">Recruiting &amp; Player Management</div>
-          <div class="flip-hint">Click to read more →</div>
-        </div>
-        <div class="card-back">
-          <div class="card-back-header">
-            <div class="card-back-avatar"><img src="<?php echo esc_url($t); ?>/images/team/horace-neysmith.png" alt="Horace Neysmith"></div>
-            <div>
-              <div class="card-back-name">Horace Neysmith</div>
-              <div class="card-back-role">Recruiting &amp; Player Management</div>
-            </div>
-          </div>
-          <div class="card-back-bio">A 15-year coach at the youth level, first with the Georgia Hurricanes and currently with the Atlantic Celtics, Neysmith has seen more than 70 of his former players advance to compete collegiately, some of whom have played professionally in the NBA and Europe, including K.J. McDaniels (Houston Rockets) and Jodie Meeks (Detroit Pistons). Further, another of his former athletes, MarShon Brooks played for three NBA teams and this past season competed for Emporio Armani Milano in Italy. Neysmith is a 1985 graduate of the University of Massachusetts who earned 1985 All-Atlantic 10 Conference second team honors after averaging 14.9 points and 9.1 rebounds per game as a senior. A member of the UMass 80's Team of the Decade, Neysmith also earned 1985 NABC All-District and was a member of the 1982 Atlantic 10 All-Rookie Team.</div>
-          <div class="card-back-hint">Click to flip back</div>
-        </div>
-      </div>
-    </div>
-
         <!-- END FAMILY — Add more card-container blocks above this line -->
   </div>
 </section>

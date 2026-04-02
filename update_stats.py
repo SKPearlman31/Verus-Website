@@ -57,7 +57,6 @@ GLEAGUE_PLAYERS = [
     {"id": 1628995, "name": "Kevin Knox",       "ig": "kevinknox"},
     {"id": 1643019, "name": "Gabe Madsen",      "ig": "gabemadsen",      "espn_photo": "https://a.espncdn.com/i/headshots/mens-college-basketball/players/full/4432753.png"},
     {"id": 1630227, "name": "Daishen Nix",      "ig": "djdaishen"},
-    {"id": 203506,  "name": "Victor Oladipo",   "ig": "victoroladipo"},
 ]
 
 # ── G-League team full names (NBA API only returns abbreviations) ──────────
@@ -102,7 +101,7 @@ COLLEGE_PLAYERS = [
 
 # ── High School Commits (static — no stats) ───────────────────────────────
 HS_PLAYERS = [
-    {"name": "Kayden Allen",       "commitment": "Cincinnati",   "position": "Guard",   "ig": "kaydenallennn",     "photo": "images/players/kayden-allen.jpg"},
+    {"name": "Kayden Allen",       "commitment": "UNCOMMITTED",  "position": "Guard",   "ig": "kaydenallennn",     "photo": "images/players/kayden-allen.jpg"},
     {"name": "Gallagher Placide",  "commitment": "Wake Forest",  "position": "Forward", "ig": "gallagherplacide",  "photo": "images/players/gallagher-placide.jpg"},
     {"name": "Gavin Placide",      "commitment": "Wake Forest",  "position": "Forward", "ig": "gavinplacide",      "photo": "images/players/gavin-placide.jpg"},
     {"name": "Jaron Saulsberry",   "commitment": "Ole Miss",     "position": "Forward", "ig": "guard_upronny",     "photo": "images/players/jaron-saulsberry.jpg"},
