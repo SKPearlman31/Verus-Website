@@ -87,7 +87,9 @@ function buildCollegeCard(p){
 
   let statsHtml='';
   if(isHS){
-    statsHtml=`<div class="player-commit">Committed to ${p.commitment}</div>`;
+    statsHtml=p.commitment==='UNCOMMITTED'
+      ? `<div class="player-commit">UNCOMMITTED</div>`
+      : `<div class="player-commit">Committed to ${p.commitment}</div>`;
   } else if(p.stats){
     statsHtml=`<div class="player-stats">
       <div class="stat"><span class="stat-val">${stats.ppg??'—'}</span><span class="stat-label">PPG</span></div>
