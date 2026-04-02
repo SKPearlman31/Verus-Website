@@ -374,7 +374,7 @@ var ROSTER_DATA = {
       "name": "Kayden Allen",
       "position": "Guard",
       "school": "UNCOMMITTED",
-      "type": "college",
+      "type": "highschool",
       "class_year": 2026,
       "commitment": "UNCOMMITTED",
       "headshot_local": "images/players/kayden-allen.jpg",

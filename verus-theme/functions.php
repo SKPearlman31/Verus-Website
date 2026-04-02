@@ -35,7 +35,7 @@ add_action('wp_enqueue_scripts', function () {
         'verus-main',
         get_template_directory_uri() . '/js/main.js',
         [],
-        '1.0.0',
+        '1.0.1',
         true // Load in footer
     );
 
