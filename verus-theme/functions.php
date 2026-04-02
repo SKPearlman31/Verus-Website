@@ -27,7 +27,7 @@ add_action('wp_enqueue_scripts', function () {
         'verus-style',
         get_template_directory_uri() . '/css/style.css',
         ['verus-google-fonts'],
-        '1.0.0'
+        '1.0.1'
     );
 
     // Main JS
