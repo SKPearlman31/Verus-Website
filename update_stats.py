@@ -464,7 +464,7 @@ def process_college_players():
         player = {
             "name": entry["name"],
             "position": entry["position"],
-            "school": f"{entry['commitment']} Commit",
+            "school": "UNCOMMITTED" if entry["commitment"] == "UNCOMMITTED" else f"{entry['commitment']} Commit",
             "type": "highschool",
             "class_year": 2026,
             "commitment": entry["commitment"],
