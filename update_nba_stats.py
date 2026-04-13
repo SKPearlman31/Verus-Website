@@ -33,6 +33,7 @@ POSITION_MAP = {"F": "Forward", "G": "Guard", "C": "Center", "F-C": "Forward-Cen
 
 # ── NBA Roster (ESPN IDs) ─────────────────────────────────────────────────
 NBA_PLAYERS = [
+    {"espn_id": 4397885, "nba_id": 1630625, "name": "Dalano Banton",    "ig": "_dubberdon"},
     {"espn_id": 4433249, "nba_id": 1631217, "name": "Moussa Diabaté",   "ig": "m0ussadiabate"},
     {"espn_id": 4431786, "nba_id": 1642352, "name": "Keshad Johnson",   "ig": "kj_showtime0"},
     {"espn_id": 4433247, "nba_id": 1630228, "name": "Jonathan Kuminga",  "ig": "jonathan_kuminga"},
