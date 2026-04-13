@@ -36,7 +36,6 @@ NBA_STATS_HEADERS = {
 
 # ── G-League Roster ────────────────────────────────────────────────────────
 GLEAGUE_PLAYERS = [
-    {"id": 1630625, "name": "Dalano Banton",   "ig": "_dubberdon"},
     {"id": 1630835, "name": "LJ Figueroa",     "ig": "l_comeup",         "espn_photo": "https://a.espncdn.com/i/headshots/mens-college-basketball/players/full/4397125.png"},
     {"id": 1641746, "name": "Coleman Hawkins",  "ig": "colemanhawkins33", "espn_photo": "https://a.espncdn.com/i/headshots/mens-college-basketball/players/full/4432976.png"},
     {"id": 1642939, "name": "Miles Kelly",      "ig": "miles5kelly"},

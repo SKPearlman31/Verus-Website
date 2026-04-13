@@ -38,6 +38,7 @@ API_DELAY = 0.4  # seconds between NBA API calls
 
 # ── NBA Roster ─────────────────────────────────────────────────────────────
 NBA_PLAYERS = [
+    {"id": 1630625, "name": "Dalano Banton",    "ig": "_dubberdon"},
     {"id": 1631217, "name": "Moussa Diabaté",   "ig": "m0ussadiabate"},
     {"id": 1642352, "name": "Keshad Johnson",   "ig": "kj_showtime0"},
     {"id": 1630228, "name": "Jonathan Kuminga",  "ig": "jonathan_kuminga"},
@@ -50,7 +51,6 @@ NBA_PLAYERS = [
 
 # ── G-League Roster ────────────────────────────────────────────────────────
 GLEAGUE_PLAYERS = [
-    {"id": 1630625, "name": "Dalano Banton",   "ig": "_dubberdon"},
     {"id": 1630835, "name": "LJ Figueroa",     "ig": "l_comeup",         "espn_photo": "https://a.espncdn.com/i/headshots/mens-college-basketball/players/full/4397125.png"},
     {"id": 1641746, "name": "Coleman Hawkins",  "ig": "colemanhawkins33", "espn_photo": "https://a.espncdn.com/i/headshots/mens-college-basketball/players/full/4432976.png"},
     {"id": 1642939, "name": "Miles Kelly",      "ig": "miles5kelly"},
