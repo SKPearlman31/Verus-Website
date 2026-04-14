@@ -161,7 +161,8 @@ def fetch_gleague_stats(nba_id):
                 "gp": reg["GP"],
             }
         return None
-    except Exception:
+    except Exception as e:
+        print(f"    ⚠ G-League stats unavailable for {nba_id}: {e}")
         return None
 
 
