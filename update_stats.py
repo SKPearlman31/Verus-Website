@@ -44,7 +44,7 @@ NBA_PLAYERS = [
     {"id": 1630228, "name": "Jonathan Kuminga",  "ig": "jonathan_kuminga"},
     {"id": 1630544, "name": "Tre Mann",          "ig": "treshaunmann"},
     {"id": 1631169, "name": "Josh Minott",       "ig": "jday.8"},
-    {"id": 1641803, "name": "Tristen Newton",    "ig": "tristenewton", "gleague_stats": True},
+    {"id": 1641803, "name": "Tristen Newton",    "ig": "tristenewton"},
     {"id": 1641772, "name": "Nae'Qwan Tomlin",   "ig": "nae_ratty"},
     {"id": 1641771, "name": "Jalen Slawson",     "ig": "jalenslawson"},
 ]
@@ -299,9 +299,11 @@ def process_nba_players():
             time.sleep(API_DELAY)
 
             gl_stats = None
-            if entry.get("gleague_stats"):
+            try:
                 gl_stats = retry(lambda pid=pid: fetch_nba_stats(pid, league_id="20"))
-                time.sleep(API_DELAY)
+            except Exception:
+                pass  # No G-League stats — that's fine
+            time.sleep(API_DELAY)
 
             headshot_file = f"{slug(entry['name'])}.png"
             headshot_tasks.append((

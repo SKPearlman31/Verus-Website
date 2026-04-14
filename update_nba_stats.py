@@ -28,6 +28,15 @@ ESPN_NBA_ATHLETE_URL = "https://site.web.api.espn.com/apis/common/v3/sports/bask
 ESPN_COLLEGE_STATS_URL = "https://site.web.api.espn.com/apis/common/v3/sports/basketball/mens-college-basketball/athletes/{espn_id}/stats"
 ESPN_HEADSHOT_URL = "https://a.espncdn.com/i/headshots/mens-college-basketball/players/full/{espn_id}.png"
 
+# stats.nba.com for G-League stats (LeagueID=20)
+NBA_STATS_CAREER_URL = "https://stats.nba.com/stats/playercareerstats?PlayerID={nba_id}&PerMode=PerGame&LeagueID=20"
+NBA_STATS_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
+    "Referer": "https://www.nba.com/",
+    "Origin": "https://www.nba.com",
+    "Accept": "application/json",
+}
+
 # Position abbreviation map
 POSITION_MAP = {"F": "Forward", "G": "Guard", "C": "Center", "F-C": "Forward-Center", "G-F": "Guard-Forward"}
 
@@ -110,6 +119,52 @@ def slug(name):
     )
 
 
+def fetch_gleague_stats(nba_id):
+    """Fetch current-season G-League stats from stats.nba.com. Returns dict or None."""
+    try:
+        url = NBA_STATS_CAREER_URL.format(nba_id=nba_id)
+        req = urllib.request.Request(url, headers=NBA_STATS_HEADERS)
+        with urllib.request.urlopen(req, context=SSL_CTX, timeout=15) as resp:
+            data = json.loads(resp.read().decode())
+
+        reg = show = None
+        for rs in data["resultSets"]:
+            if not rs["rowSet"]:
+                continue
+            headers = rs["headers"]
+            for row in rs["rowSet"]:
+                r = dict(zip(headers, row))
+                if r.get("SEASON_ID") != CURRENT_SEASON:
+                    continue
+                if rs["name"] == "SeasonTotalsRegularSeason":
+                    reg = r
+                elif rs["name"] == "SeasonTotalsShowcaseSeason":
+                    show = r
+
+        if reg and show:
+            reg_gp, show_gp = reg["GP"], show["GP"]
+            total_gp = reg_gp + show_gp
+            if total_gp > 0:
+                return {
+                    "ppg": round((reg["PTS"] * reg_gp + show["PTS"] * show_gp) / total_gp, 1),
+                    "rpg": round((reg["REB"] * reg_gp + show["REB"] * show_gp) / total_gp, 1),
+                    "apg": round((reg["AST"] * reg_gp + show["AST"] * show_gp) / total_gp, 1),
+                    "fg_pct": round((reg["FG_PCT"] * reg_gp + show["FG_PCT"] * show_gp) / total_gp * 100, 1),
+                    "gp": total_gp,
+                }
+        elif reg:
+            return {
+                "ppg": round(reg["PTS"], 1),
+                "rpg": round(reg["REB"], 1),
+                "apg": round(reg["AST"], 1),
+                "fg_pct": round(reg["FG_PCT"] * 100, 1),
+                "gp": reg["GP"],
+            }
+        return None
+    except Exception:
+        return None
+
+
 def fetch_espn_nba_player(entry):
     """Fetch a single NBA player's stats and info from ESPN. Returns player dict."""
     espn_id = entry["espn_id"]
@@ -162,6 +217,9 @@ def fetch_espn_nba_player(entry):
                     "team_abbr": team_abbr,
                 }
 
+        # Fetch G-League stats (non-fatal)
+        gl_stats = fetch_gleague_stats(nba_id)
+
         headshot_file = f"{slug(entry['name'])}.png"
         player = {
             "id": nba_id,
@@ -174,10 +232,11 @@ def fetch_espn_nba_player(entry):
             "headshot_local": f"images/players/{headshot_file}",
             "ig": entry.get("ig", ""),
             "stats": stats,
-            "gleague_stats": None,
+            "gleague_stats": gl_stats,
         }
         stat_line = f"{stats['ppg']} PPG | {stats['rpg']} RPG | {stats['apg']} APG | {stats['gp']} GP" if stats else "No stats"
-        print(f"  {display_name} → {team_full} | {stat_line}")
+        gl_line = f" | GL: {gl_stats['ppg']} PPG {gl_stats['gp']} GP" if gl_stats else ""
+        print(f"  {display_name} → {team_full} | {stat_line}{gl_line}")
         return player
 
     except Exception as e:
