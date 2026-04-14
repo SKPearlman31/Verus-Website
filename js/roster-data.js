@@ -21,7 +21,13 @@ var ROSTER_DATA = {
         "gp": 40,
         "team_abbr": "BOS"
       },
-      "gleague_stats": null
+      "gleague_stats": {
+        "ppg": 24.9,
+        "rpg": 4.1,
+        "apg": 7.0,
+        "fg_pct": 43.9,
+        "gp": 44
+      }
     },
     {
       "id": 1630228,
@@ -61,7 +67,13 @@ var ROSTER_DATA = {
         "gp": 33,
         "team_abbr": "BKN"
       },
-      "gleague_stats": null
+      "gleague_stats": {
+        "ppg": 10.3,
+        "rpg": 3.0,
+        "apg": 2.0,
+        "fg_pct": 38.5,
+        "gp": 3
+      }
     },
     {
       "id": 1631217,
@@ -141,7 +153,13 @@ var ROSTER_DATA = {
         "gp": 8,
         "team_abbr": "HOU"
       },
-      "gleague_stats": null
+      "gleague_stats": {
+        "ppg": 25.8,
+        "rpg": 5.1,
+        "apg": 5.6,
+        "fg_pct": 47.9,
+        "gp": 49
+      }
     },
     {
       "id": 1641771,
@@ -161,7 +179,13 @@ var ROSTER_DATA = {
         "gp": 5,
         "team_abbr": "IND"
       },
-      "gleague_stats": null
+      "gleague_stats": {
+        "ppg": 19.3,
+        "rpg": 7.3,
+        "apg": 5.5,
+        "fg_pct": 47.7,
+        "gp": 37
+      }
     },
     {
       "id": 1642352,
@@ -181,7 +205,13 @@ var ROSTER_DATA = {
         "gp": 25,
         "team_abbr": "MIA"
       },
-      "gleague_stats": null
+      "gleague_stats": {
+        "ppg": 17.4,
+        "rpg": 8.6,
+        "apg": 2.9,
+        "fg_pct": 51.5,
+        "gp": 8
+      }
     }
   ],
   "gleague": [

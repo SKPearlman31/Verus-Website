@@ -13,14 +13,20 @@
       "headshot_local": "images/players/dalano-banton.png",
       "ig": "_dubberdon",
       "stats": {
-        "ppg": 24.6,
-        "rpg": 4.0,
-        "apg": 6.8,
-        "fg_pct": 43.9,
-        "gp": 40,
+        "ppg": 3.0,
+        "rpg": 0.5,
+        "apg": 1.0,
+        "fg_pct": 50.0,
+        "gp": 2,
         "team_abbr": "BOS"
       },
-      "gleague_stats": null
+      "gleague_stats": {
+        "ppg": 24.9,
+        "rpg": 4.1,
+        "apg": 7.0,
+        "fg_pct": 43.9,
+        "gp": 44
+      }
     },
     {
       "id": 1630228,
@@ -60,7 +66,13 @@
         "gp": 33,
         "team_abbr": "BKN"
       },
-      "gleague_stats": null
+      "gleague_stats": {
+        "ppg": 10.3,
+        "rpg": 3.0,
+        "apg": 2.0,
+        "fg_pct": 38.5,
+        "gp": 3
+      }
     },
     {
       "id": 1631217,
@@ -140,7 +152,13 @@
         "gp": 8,
         "team_abbr": "HOU"
       },
-      "gleague_stats": null
+      "gleague_stats": {
+        "ppg": 25.8,
+        "rpg": 5.1,
+        "apg": 5.6,
+        "fg_pct": 47.9,
+        "gp": 49
+      }
     },
     {
       "id": 1641771,
@@ -160,7 +178,13 @@
         "gp": 5,
         "team_abbr": "IND"
       },
-      "gleague_stats": null
+      "gleague_stats": {
+        "ppg": 19.3,
+        "rpg": 7.3,
+        "apg": 5.5,
+        "fg_pct": 47.7,
+        "gp": 37
+      }
     },
     {
       "id": 1642352,
@@ -180,7 +204,13 @@
         "gp": 25,
         "team_abbr": "MIA"
       },
-      "gleague_stats": null
+      "gleague_stats": {
+        "ppg": 17.4,
+        "rpg": 8.6,
+        "apg": 2.9,
+        "fg_pct": 51.5,
+        "gp": 8
+      }
     }
   ],
   "gleague": [

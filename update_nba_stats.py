@@ -434,14 +434,24 @@ def main():
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
     os.makedirs(HEADSHOT_DIR, exist_ok=True)
 
-    # Fetch NBA stats from ESPN
-    nba = process_nba_players()
-
-    # Load existing data to preserve G-League stats
+    # Load existing data to preserve G-League stats on fallback
     existing = {}
     if os.path.exists(OUTPUT_PATH):
         with open(OUTPUT_PATH) as f:
             existing = json.load(f)
+
+    # Fetch NBA stats from ESPN
+    nba = process_nba_players()
+
+    # Carry forward gleague_stats from previous run when live fetch timed out
+    prev_gl = {p["id"]: p.get("gleague_stats") for p in existing.get("nba", []) if p.get("gleague_stats")}
+    carried = 0
+    for player in nba:
+        if not player.get("gleague_stats") and player["id"] in prev_gl:
+            player["gleague_stats"] = prev_gl[player["id"]]
+            carried += 1
+    if carried:
+        print(f"  ↻ Carried forward G-League stats for {carried} player(s) from previous run")
 
     # Fetch college + intl (always included)
     college = process_college_players()
