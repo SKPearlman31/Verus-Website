@@ -38,10 +38,10 @@ API_DELAY = 0.4  # seconds between NBA API calls
 
 # ── NBA Roster ─────────────────────────────────────────────────────────────
 NBA_PLAYERS = [
+    {"id": 1630228, "name": "Jonathan Kuminga",  "ig": "jonathan_kuminga"},
     {"id": 1630625, "name": "Dalano Banton",    "ig": "_dubberdon"},
     {"id": 1631217, "name": "Moussa Diabaté",   "ig": "m0ussadiabate"},
     {"id": 1642352, "name": "Keshad Johnson",   "ig": "kj_showtime0"},
-    {"id": 1630228, "name": "Jonathan Kuminga",  "ig": "jonathan_kuminga"},
     {"id": 1630544, "name": "Tre Mann",          "ig": "treshaunmann"},
     {"id": 1631169, "name": "Josh Minott",       "ig": "jday.8"},
     {"id": 1641803, "name": "Tristen Newton",    "ig": "tristenewton"},

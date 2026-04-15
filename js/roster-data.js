@@ -4,6 +4,26 @@ var ROSTER_DATA = {
   "season": "2025-26",
   "nba": [
     {
+      "id": 1630228,
+      "name": "Jonathan Kuminga",
+      "position": "Forward",
+      "team": "Atlanta Hawks",
+      "team_city": "Atlanta",
+      "team_abbr": "ATL",
+      "headshot_nba": "https://cdn.nba.com/headshots/nba/latest/1040x760/1630228.png",
+      "headshot_local": "images/players/jonathan-kuminga.png",
+      "ig": "jonathan_kuminga",
+      "stats": {
+        "ppg": 12.1,
+        "rpg": 5.9,
+        "apg": 2.5,
+        "fg_pct": 45.4,
+        "gp": 20,
+        "team_abbr": "ATL"
+      },
+      "gleague_stats": null
+    },
+    {
       "id": 1630625,
       "name": "Dalano Banton",
       "position": "Forward",
@@ -28,26 +48,6 @@ var ROSTER_DATA = {
         "fg_pct": 43.9,
         "gp": 44
       }
-    },
-    {
-      "id": 1630228,
-      "name": "Jonathan Kuminga",
-      "position": "Forward",
-      "team": "Atlanta Hawks",
-      "team_city": "Atlanta",
-      "team_abbr": "ATL",
-      "headshot_nba": "https://cdn.nba.com/headshots/nba/latest/1040x760/1630228.png",
-      "headshot_local": "images/players/jonathan-kuminga.png",
-      "ig": "jonathan_kuminga",
-      "stats": {
-        "ppg": 12.1,
-        "rpg": 5.9,
-        "apg": 2.5,
-        "fg_pct": 45.4,
-        "gp": 20,
-        "team_abbr": "ATL"
-      },
-      "gleague_stats": null
     },
     {
       "id": 1631169,
