@@ -7,6 +7,7 @@ on:
       - 'js/roster-data.js'
       - 'data/players.json'
       - 'images/players/**'
+      - '.github/workflows/update-stats.yml'
   schedule:
     - cron: '0 10 * * *'   # 5 AM EST (UTC-5) — NBA + College + Intl via ESPN
     - cron: '0 11 * * *'   # 6 AM EST (UTC-5) — G-League via stats.nba.com
@@ -21,6 +22,7 @@ on:
           - both
           - nba
           - gleague
+          - deploy-only
 
 jobs:
   update-nba:
@@ -87,7 +89,7 @@ jobs:
             git push
           fi
 
-  # ── Deploy to WordPress via FTP ──────────────────────────────────────────
+  # ── Deploy to WordPress via REST API ─────────────────────────────────────
   deploy-to-wordpress:
     needs: [update-nba, update-gleague]
     if: |
@@ -95,42 +97,31 @@ jobs:
       (needs.update-nba.result == 'success' || needs.update-nba.result == 'skipped') &&
       (needs.update-gleague.result == 'success' || needs.update-gleague.result == 'skipped')
     runs-on: ubuntu-latest
-    env:
-      FTP_HOST: ${{ secrets.VERUS_FTP_HOST }}
-      FTP_USER: ${{ secrets.VERUS_FTP_USER }}
-      FTP_PASS: ${{ secrets.VERUS_FTP_PASS }}
     steps:
       - uses: actions/checkout@v4
         with:
           ref: main
 
-      - name: Check FTP credentials
-        id: ftp-check
+      - name: Push roster data to WordPress
+        env:
+          VERUS_SITE_URL: ${{ secrets.VERUS_SITE_URL }}
+          VERUS_STATS_API_KEY: ${{ secrets.VERUS_STATS_API_KEY }}
         run: |
-          if [ -z "$FTP_HOST" ] || [ -z "$FTP_USER" ] || [ -z "$FTP_PASS" ]; then
-            echo "configured=false" >> "$GITHUB_OUTPUT"
-            echo "⚠ FTP credentials not set — skipping WordPress deploy"
-          else
-            echo "configured=true" >> "$GITHUB_OUTPUT"
-            echo "✓ FTP credentials found — deploying to WordPress"
+          if [ -z "$VERUS_SITE_URL" ] || [ -z "$VERUS_STATS_API_KEY" ]; then
+            echo "⚠ VERUS_SITE_URL or VERUS_STATS_API_KEY not set — skipping deploy"
+            exit 0
           fi
-
-      - name: Deploy roster data to WordPress
-        if: steps.ftp-check.outputs.configured == 'true'
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.VERUS_FTP_HOST }}
-          username: ${{ secrets.VERUS_FTP_USER }}
-          password: ${{ secrets.VERUS_FTP_PASS }}
-          local-dir: ./js/
-          server-dir: /public_html/wp-content/themes/flavor starter/verus/js/
-
-      - name: Deploy player images to WordPress
-        if: steps.ftp-check.outputs.configured == 'true'
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.VERUS_FTP_HOST }}
-          username: ${{ secrets.VERUS_FTP_USER }}
-          password: ${{ secrets.VERUS_FTP_PASS }}
-          local-dir: ./images/players/
-          server-dir: /public_html/wp-content/themes/flavor starter/verus/images/players/
+          ENDPOINT="${VERUS_SITE_URL%/}/wp-json/verus/v1/update-stats"
+          echo "Pushing roster data to $ENDPOINT ..."
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$ENDPOINT" \
+            -H "Content-Type: application/json" \
+            -H "X-Verus-Key: $VERUS_STATS_API_KEY" \
+            -d @data/players.json)
+          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+          echo "$BODY"
+          if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
+            echo "✓ WordPress updated successfully (HTTP $HTTP_CODE)"
+          else
+            echo "⚠ WordPress push failed (HTTP $HTTP_CODE) — non-fatal"
+          fi
