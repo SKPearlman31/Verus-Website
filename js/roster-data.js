@@ -328,7 +328,7 @@ var ROSTER_DATA = {
     {
       "name": "Devin Brown",
       "position": "Guard",
-      "school": "Davidson",
+      "school": "Notre Dame",
       "type": "college",
       "espn_id": 5311849,
       "headshot_espn": "https://a.espncdn.com/i/headshots/mens-college-basketball/players/full/5311849.png",
@@ -345,7 +345,7 @@ var ROSTER_DATA = {
     {
       "name": "Akai Fleming",
       "position": "Guard",
-      "school": "Georgia Tech",
+      "school": "Cincinnati",
       "type": "college",
       "espn_id": 5101784,
       "headshot_espn": "https://a.espncdn.com/i/headshots/mens-college-basketball/players/full/5101784.png",

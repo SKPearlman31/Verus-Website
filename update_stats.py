@@ -93,10 +93,10 @@ GLEAGUE_TEAMS = {
 
 # ── College / NIL Roster ──────────────────────────────────────────────────
 COLLEGE_PLAYERS = [
-    {"espn_id": 5101784, "name": "Akai Fleming",           "school": "Georgia Tech",    "position": "Guard",  "ig": "akai.fleming"},
+    {"espn_id": 5101784, "name": "Akai Fleming",           "school": "Cincinnati",      "position": "Guard",  "ig": "akai.fleming"},
     {"espn_id": 5142608, "name": "Jaiden Glover-Toscano",  "school": "Saint Joseph's",  "position": "Guard",  "ig": "jglove.11"},
     {"espn_id": 4710770, "name": "Meechie Johnson Jr.",    "school": "South Carolina",  "position": "Guard",  "ig": "meechie.1"},
-    {"espn_id": 5311849, "name": "Devin Brown",            "school": "Davidson",        "position": "Guard",  "ig": "_devinbrown"},
+    {"espn_id": 5311849, "name": "Devin Brown",            "school": "Notre Dame",      "position": "Guard",  "ig": "_devinbrown"},
 ]
 
 # ── High School Commits (static — no stats) ───────────────────────────────
