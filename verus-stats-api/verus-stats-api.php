@@ -43,8 +43,9 @@ add_action('verus_pull_stats_from_github', 'verus_sync_from_github');
  */
 function verus_sync_from_github() {
     $response = wp_remote_get(VERUS_GITHUB_RAW_URL, [
-        'timeout' => 30,
-        'headers' => ['Accept' => 'application/json'],
+        'timeout'   => 30,
+        'headers'   => ['Accept' => 'application/json'],
+        'sslverify' => ABSPATH . WPINC . '/certificates/ca-bundle.crt',
     ]);
 
     if (is_wp_error($response)) {
