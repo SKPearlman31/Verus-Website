@@ -3,7 +3,7 @@
  * Plugin Name: Verus Stats API
  * Plugin URI: https://verusteam.com
  * Description: Auto-syncs player stats from GitHub and provides a REST API endpoint for updates.
- * Version: 1.1.0
+ * Version: 1.2.0
  * Author: Verus Management Team
  * License: Private
  * Text Domain: verus-stats-api
@@ -15,6 +15,23 @@ if (!defined('ABSPATH')) {
 
 // ── GitHub Raw URL ──────────────────────────────────────────────────────
 define('VERUS_GITHUB_RAW_URL', 'https://raw.githubusercontent.com/SKPearlman31/Verus-Website/main/data/players.json');
+
+/**
+ * Absolute path to the CA bundle used to verify the GitHub fetch.
+ *
+ * WordPress ships its own ca-bundle.crt and normally that is the right choice.
+ * On older cores (this site runs 5.0.x) that bundle predates the roots GitHub
+ * now chains to, so the fetch dies with:
+ *
+ *   cURL error 60: SSL certificate problem: unable to get local issuer certificate
+ *
+ * Prefer the current bundle shipped alongside this plugin, and fall back to
+ * core's if it is ever missing. Verification stays ON either way.
+ */
+function verus_ca_bundle_path() {
+    $bundled = plugin_dir_path(__FILE__) . 'cacert.pem';
+    return file_exists($bundled) ? $bundled : ABSPATH . WPINC . '/certificates/ca-bundle.crt';
+}
 
 // ── Cron Schedule ───────────────────────────────────────────────────────
 
@@ -43,9 +60,10 @@ add_action('verus_pull_stats_from_github', 'verus_sync_from_github');
  */
 function verus_sync_from_github() {
     $response = wp_remote_get(VERUS_GITHUB_RAW_URL, [
-        'timeout'   => 30,
-        'headers'   => ['Accept' => 'application/json'],
-        'sslverify' => ABSPATH . WPINC . '/certificates/ca-bundle.crt',
+        'timeout'         => 30,
+        'headers'         => ['Accept' => 'application/json'],
+        'sslverify'       => true,
+        'sslcertificates' => verus_ca_bundle_path(),
     ]);
 
     if (is_wp_error($response)) {

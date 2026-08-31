@@ -1,5 +1,11 @@
 name: Update Player Stats
 
+# The stats jobs commit regenerated data back to main. Without this the default
+# GITHUB_TOKEN is read-only and every push step dies with
+# "Permission to SKPearlman31/Verus-Website.git denied to github-actions[bot]" (403).
+permissions:
+  contents: write
+
 on:
   push:
     branches: [main]
