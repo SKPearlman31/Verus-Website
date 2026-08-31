@@ -55,18 +55,19 @@ NBA_PLAYERS = [
 
 # ── College / NIL Roster ──────────────────────────────────────────────────
 COLLEGE_PLAYERS = [
-    {"espn_id": 5101784, "name": "Akai Fleming",           "school": "Georgia Tech",    "position": "Guard",  "ig": "akai.fleming"},
+    {"espn_id": 5101784, "name": "Akai Fleming",           "school": "Cincinnati",      "position": "Guard",  "ig": "akai.fleming"},
     {"espn_id": 5142608, "name": "Jaiden Glover-Toscano",  "school": "Saint Joseph's",  "position": "Guard",  "ig": "jglove.11"},
     {"espn_id": 4710770, "name": "Meechie Johnson Jr.",    "school": "South Carolina",  "position": "Guard",  "ig": "meechie.1"},
-    {"espn_id": 5311849, "name": "Devin Brown",            "school": "Davidson",        "position": "Guard",  "ig": "_devinbrown"},
+    {"espn_id": 5311849, "name": "Devin Brown",            "school": "Notre Dame",      "position": "Guard",  "ig": "_devinbrown"},
 ]
 
 # ── High School Commits (static) ─────────────────────────────────────────
 HS_PLAYERS = [
-    {"name": "Kayden Allen",       "commitment": "UNCOMMITTED",  "position": "Guard",   "ig": "kaydenallennn",     "photo": "images/players/kayden-allen.jpg"},
+    {"name": "Kayden Allen",       "commitment": "Georgia Tech", "position": "Guard",   "ig": "kaydenallennn",     "photo": "images/players/kayden-allen.jpg"},
     {"name": "Gallagher Placide",  "commitment": "Wake Forest",  "position": "Forward", "ig": "gallagherplacide",  "photo": "images/players/gallagher-placide.jpg"},
     {"name": "Gavin Placide",      "commitment": "Wake Forest",  "position": "Forward", "ig": "gavinplacide",      "photo": "images/players/gavin-placide.jpg"},
     {"name": "Jaron Saulsberry",   "commitment": "Ole Miss",     "position": "Forward", "ig": "guard_upronny",     "photo": "images/players/jaron-saulsberry.jpg"},
+    {"name": "Derrick Cross Jr.",  "commitment": "",             "position": "",        "ig": "jr_cross_15",       "photo": "images/players/derrick-cross-jr.jpg", "class_year": 2027},
 ]
 
 # ── College/NIL players without ESPN stats (static) ──────────────────────
@@ -352,14 +353,21 @@ def process_college_players():
 
     print("\n  ── High School Commits ──")
     for entry in HS_PLAYERS:
-        print(f"  {entry['name']} → {entry['commitment']} commit")
+        commitment = entry["commitment"]
+        if not commitment:
+            school = ""
+        elif commitment == "UNCOMMITTED":
+            school = "UNCOMMITTED"
+        else:
+            school = f"{commitment} Commit"
+        print(f"  {entry['name']} → {commitment or 'no commitment listed'}")
         results.append({
             "name": entry["name"],
             "position": entry["position"],
-            "school": "UNCOMMITTED" if entry["commitment"] == "UNCOMMITTED" else f"{entry['commitment']} Commit",
+            "school": school,
             "type": "highschool",
-            "class_year": 2026,
-            "commitment": entry["commitment"],
+            "class_year": entry.get("class_year", 2026),
+            "commitment": commitment,
             "headshot_local": entry.get("photo"),
             "ig": entry.get("ig", ""),
             "stats": None,
