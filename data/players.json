@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-31T06:42:52.876972",
+  "updated": "2026-09-01T14:25:45.935472",
   "season": "2025-26",
   "nba": [
     {
@@ -36,7 +36,7 @@
         "ppg": 3.0,
         "rpg": 0.5,
         "apg": 1.0,
-        "fg_pct": 50.0,
+        "fg_pct": 75.0,
         "gp": 2,
         "team_abbr": "BOS"
       },
@@ -85,31 +85,11 @@
       "headshot_local": "images/players/moussa-diabate.png",
       "ig": "m0ussadiabate",
       "stats": {
-        "ppg": 8.1,
+        "ppg": 7.9,
         "rpg": 8.7,
         "apg": 1.9,
-        "fg_pct": 62.1,
-        "gp": 61,
-        "team_abbr": "CHA"
-      },
-      "gleague_stats": null
-    },
-    {
-      "id": 1630544,
-      "name": "Tre Mann",
-      "position": "Guard",
-      "team": "Charlotte Hornets",
-      "team_city": "Charlotte",
-      "team_abbr": "CHA",
-      "headshot_nba": "https://cdn.nba.com/headshots/nba/latest/1040x760/1630544.png",
-      "headshot_local": "images/players/tre-mann.png",
-      "ig": "treshaunmann",
-      "stats": {
-        "ppg": 6.1,
-        "rpg": 2.0,
-        "apg": 1.9,
-        "fg_pct": 35.7,
-        "gp": 44,
+        "fg_pct": 63.1,
+        "gp": 73,
         "team_abbr": "CHA"
       },
       "gleague_stats": null
@@ -125,11 +105,11 @@
       "headshot_local": "images/players/naeqwan-tomlin.png",
       "ig": "nae_ratty",
       "stats": {
-        "ppg": 5.9,
-        "rpg": 2.8,
+        "ppg": 5.8,
+        "rpg": 2.9,
         "apg": 0.8,
-        "fg_pct": 46.8,
-        "gp": 53,
+        "fg_pct": 47.8,
+        "gp": 64,
         "team_abbr": "CLE"
       },
       "gleague_stats": null
@@ -145,11 +125,11 @@
       "headshot_local": "images/players/tristen-newton.png",
       "ig": "tristenewton",
       "stats": {
-        "ppg": 0.4,
-        "rpg": 0.5,
-        "apg": 0.3,
-        "fg_pct": 12.5,
-        "gp": 8,
+        "ppg": 12.0,
+        "rpg": 3.0,
+        "apg": 0.0,
+        "fg_pct": 44.4,
+        "gp": 1,
         "team_abbr": "HOU"
       },
       "gleague_stats": {
@@ -171,11 +151,11 @@
       "headshot_local": "images/players/jalen-slawson.png",
       "ig": "jalenslawson",
       "stats": {
-        "ppg": 7.6,
-        "rpg": 4.6,
-        "apg": 3.0,
-        "fg_pct": 37.5,
-        "gp": 5,
+        "ppg": 7.3,
+        "rpg": 4.4,
+        "apg": 2.8,
+        "fg_pct": 44.2,
+        "gp": 13,
         "team_abbr": "IND"
       },
       "gleague_stats": {
@@ -197,11 +177,11 @@
       "headshot_local": "images/players/keshad-johnson.png",
       "ig": "kj_showtime0",
       "stats": {
-        "ppg": 3.8,
-        "rpg": 2.0,
-        "apg": 0.1,
-        "fg_pct": 43.2,
-        "gp": 25,
+        "ppg": 4.3,
+        "rpg": 1.9,
+        "apg": 0.3,
+        "fg_pct": 49.0,
+        "gp": 32,
         "team_abbr": "MIA"
       },
       "gleague_stats": {
@@ -211,6 +191,26 @@
         "fg_pct": 51.5,
         "gp": 8
       }
+    },
+    {
+      "id": 1630544,
+      "name": "Tre Mann",
+      "position": "Guard",
+      "team": "Washington Wizards",
+      "team_city": "Washington",
+      "team_abbr": "WSH",
+      "headshot_nba": "https://cdn.nba.com/headshots/nba/latest/1040x760/1630544.png",
+      "headshot_local": "images/players/tre-mann.png",
+      "ig": "treshaunmann",
+      "stats": {
+        "ppg": 5.5,
+        "rpg": 1.7,
+        "apg": 1.6,
+        "fg_pct": 36.0,
+        "gp": 53,
+        "team_abbr": "WSH"
+      },
+      "gleague_stats": null
     }
   ],
   "gleague": [
