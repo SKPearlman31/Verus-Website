@@ -1,6 +1,6 @@
 // Auto-generated — do not edit manually
 var ROSTER_DATA = {
-  "updated": "2026-09-05T13:08:26.438650",
+  "updated": "2026-09-06T13:18:33.769074",
   "season": "2025-26",
   "nba": [
     {
@@ -49,7 +49,7 @@ var ROSTER_DATA = {
       },
       "gleague_stats": {
         "ppg": 10.3,
-        "rpg": 3.0,
+        "rpg": 2.7,
         "apg": 2.0,
         "fg_pct": 38.5,
         "gp": 3
@@ -116,8 +116,8 @@ var ROSTER_DATA = {
       "gleague_stats": {
         "ppg": 25.8,
         "rpg": 5.1,
-        "apg": 5.6,
-        "fg_pct": 47.9,
+        "apg": 5.5,
+        "fg_pct": 47.8,
         "gp": 49
       }
     },
