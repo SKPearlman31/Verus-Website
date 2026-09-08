@@ -1,6 +1,6 @@
 // Auto-generated — do not edit manually
 var ROSTER_DATA = {
-  "updated": "2026-09-07T15:25:10.574882",
+  "updated": "2026-09-08T14:01:18.914142",
   "season": "2025-26",
   "nba": [
     {
