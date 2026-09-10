@@ -1,6 +1,6 @@
 // Auto-generated — do not edit manually
 var ROSTER_DATA = {
-  "updated": "2026-09-10T13:09:04.620805",
+  "updated": "2026-09-10T13:35:10.873975",
   "season": "2025-26",
   "nba": [
     {
@@ -339,7 +339,7 @@ var ROSTER_DATA = {
       "position": "Guard",
       "school": "Georgia Tech",
       "type": "college",
-      "headshot_local": "images/players/kayden-allen.jpg",
+      "headshot_local": "images/players/kayden-allen-gt.jpg",
       "photo_contain": true,
       "ig": "kaydenallennn",
       "stats": null

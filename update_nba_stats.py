@@ -69,7 +69,7 @@ HS_PLAYERS = [
 COLLEGE_STATIC_PLAYERS = [
     # photo_contain: portrait-orientation photos (taller than the 4:3 card frame)
     # letterbox instead of filling, so the crop doesn't cut into the player's face.
-    {"name": "Kayden Allen",     "position": "Guard",   "school": "Georgia Tech", "ig": "kaydenallennn", "photo": "images/players/kayden-allen.jpg",     "photo_contain": True},
+    {"name": "Kayden Allen",     "position": "Guard",   "school": "Georgia Tech", "ig": "kaydenallennn", "photo": "images/players/kayden-allen-gt.jpg",  "photo_contain": True},
     {"name": "Jaron Saulsberry", "position": "Forward", "school": "Ole Miss",     "ig": "guard_upronny", "photo": "images/players/jaron-saulsberry.jpg", "photo_contain": True},
     {"name": "Kok Yat",          "position": "Forward", "school": "",             "ig": "tuloww.21",     "photo": "images/players/kok-yat.png"},
 ]
