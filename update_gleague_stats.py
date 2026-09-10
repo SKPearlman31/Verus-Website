@@ -44,6 +44,22 @@ GLEAGUE_PLAYERS = [
     {"id": 1630227, "name": "Daishen Nix",      "ig": "djdaishen"},
 ]
 
+# ── Static G-League entries ───────────────────────────────────────────────
+# Players on a G-League roster who have no stats.nba.com line yet (rookies,
+# camp/two-way signings). Their team is set by hand and is NOT overwritten by
+# the API pass, so it stays exactly as listed here.
+GLEAGUE_STATIC_PLAYERS = [
+    {
+        "name": "Meechie Johnson Jr.",
+        "position": "Guard",
+        "team": "Los Angeles Lakers",
+        "team_abbr": "LAL",
+        "ig": "meechie.1",
+        "headshot_local": "images/players/meechie-johnson-jr.png",
+        "stats": None,
+    },
+]
+
 # ── G-League team full names ──────────────────────────────────────────────
 GLEAGUE_TEAMS = {
     "BIR": "Birmingham Squadron",     "NOB": "Birmingham Squadron",
@@ -318,10 +334,22 @@ def main():
         with open(OUTPUT_PATH) as f:
             existing = json.load(f)
 
-    # If more than half the players failed (rate limiting), keep existing G-League data
+    # If more than half the players failed (rate limiting), keep existing G-League data.
+    # This check counts API-fetched players only — statics are merged below so a
+    # hardcoded entry can never disguise a failed scrape as a healthy one.
     if len(gleague) < len(GLEAGUE_PLAYERS) // 2:
         print(f"\n⚠ Only {len(gleague)}/{len(GLEAGUE_PLAYERS)} players fetched — keeping existing G-League data")
         gleague = existing.get("gleague", gleague)
+
+    # Merge static entries. Dedupe by name because the fallback above may return
+    # a previous run's list that already contains them.
+    fetched_names = {p.get("name") for p in gleague}
+    for entry in GLEAGUE_STATIC_PLAYERS:
+        if entry["name"] in fetched_names:
+            gleague = [p for p in gleague if p.get("name") != entry["name"]]
+        print(f"  {entry['name']} — {entry['team']} (static)")
+        gleague.append(dict(entry))
+    gleague.sort(key=lambda p: (p.get("team") or "zzz").lower())
 
     # Merge: use new G-League data, preserve everything else
     output = {

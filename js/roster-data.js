@@ -1,6 +1,6 @@
 // Auto-generated — do not edit manually
 var ROSTER_DATA = {
-  "updated": "2026-09-10T13:58:30.782227",
+  "updated": "2026-09-10T12:59:03.070061",
   "season": "2025-26",
   "nba": [
     {
@@ -225,13 +225,22 @@ var ROSTER_DATA = {
       "headshot_local": "images/players/coleman-hawkins.png",
       "ig": "colemanhawkins33",
       "stats": {
-        "ppg": 7.6,
-        "rpg": 6.8,
-        "apg": 5.8,
-        "fg_pct": 50.3,
-        "gp": 45,
+        "ppg": 7.8,
+        "rpg": 7.0,
+        "apg": 6.0,
+        "fg_pct": 49.8,
+        "gp": 48,
         "team_abbr": "GRG"
       }
+    },
+    {
+      "name": "Meechie Johnson Jr.",
+      "position": "Guard",
+      "team": "Los Angeles Lakers",
+      "team_abbr": "LAL",
+      "ig": "meechie.1",
+      "headshot_local": "images/players/meechie-johnson-jr.png",
+      "stats": null
     },
     {
       "id": 1630835,
@@ -243,11 +252,11 @@ var ROSTER_DATA = {
       "headshot_local": "images/players/lj-figueroa.png",
       "ig": "l_comeup",
       "stats": {
-        "ppg": 13.4,
-        "rpg": 4.7,
+        "ppg": 12.8,
+        "rpg": 4.5,
         "apg": 2.3,
-        "fg_pct": 55.1,
-        "gp": 41,
+        "fg_pct": 55.3,
+        "gp": 46,
         "team_abbr": "MXC"
       }
     },
@@ -261,11 +270,11 @@ var ROSTER_DATA = {
       "headshot_local": "images/players/daishen-nix.png",
       "ig": "djdaishen",
       "stats": {
-        "ppg": 22.1,
-        "rpg": 6.9,
+        "ppg": 22.5,
+        "rpg": 7.2,
         "apg": 7.0,
-        "fg_pct": 41.8,
-        "gp": 44,
+        "fg_pct": 41.1,
+        "gp": 49,
         "team_abbr": "RGV"
       }
     },
@@ -279,11 +288,11 @@ var ROSTER_DATA = {
       "headshot_local": "images/players/gabe-madsen.png",
       "ig": "gabemadsen",
       "stats": {
-        "ppg": 9.5,
-        "rpg": 4.8,
+        "ppg": 9.7,
+        "rpg": 4.7,
         "apg": 2.6,
-        "fg_pct": 44.0,
-        "gp": 46,
+        "fg_pct": 45.3,
+        "gp": 50,
         "team_abbr": "SXF"
       }
     },
@@ -326,21 +335,13 @@ var ROSTER_DATA = {
   ],
   "college": [
     {
-      "name": "Akai Fleming",
+      "name": "Kayden Allen",
       "position": "Guard",
-      "school": "Cincinnati",
+      "school": "Georgia Tech",
       "type": "college",
-      "espn_id": 5101784,
-      "headshot_espn": "https://a.espncdn.com/i/headshots/mens-college-basketball/players/full/5101784.png",
-      "headshot_local": "images/players/akai-fleming.png",
-      "ig": "akai.fleming",
-      "stats": {
-        "ppg": 10.4,
-        "rpg": 3.2,
-        "apg": 1.3,
-        "fg_pct": 37.3,
-        "gp": 30
-      }
+      "headshot_local": "images/players/kayden-allen.jpg",
+      "ig": "kaydenallennn",
+      "stats": null
     },
     {
       "name": "Devin Brown",
@@ -357,6 +358,34 @@ var ROSTER_DATA = {
         "apg": 1.6,
         "fg_pct": 40.8,
         "gp": 34
+      }
+    },
+    {
+      "name": "Derrick Cross Jr.",
+      "position": "",
+      "school": "",
+      "type": "highschool",
+      "class_year": 2027,
+      "commitment": "",
+      "headshot_local": "images/players/derrick-cross-jr.jpg",
+      "ig": "jr_cross_15",
+      "stats": null
+    },
+    {
+      "name": "Akai Fleming",
+      "position": "Guard",
+      "school": "Cincinnati",
+      "type": "college",
+      "espn_id": 5101784,
+      "headshot_espn": "https://a.espncdn.com/i/headshots/mens-college-basketball/players/full/5101784.png",
+      "headshot_local": "images/players/akai-fleming.png",
+      "ig": "akai.fleming",
+      "stats": {
+        "ppg": 10.4,
+        "rpg": 3.2,
+        "apg": 1.3,
+        "fg_pct": 37.3,
+        "gp": 30
       }
     },
     {
@@ -377,21 +406,13 @@ var ROSTER_DATA = {
       }
     },
     {
-      "name": "Meechie Johnson Jr.",
-      "position": "Guard",
-      "school": "South Carolina",
+      "name": "Jaron Saulsberry",
+      "position": "Forward",
+      "school": "Ole Miss",
       "type": "college",
-      "espn_id": 4710770,
-      "headshot_espn": "https://a.espncdn.com/i/headshots/mens-college-basketball/players/full/4710770.png",
-      "headshot_local": "images/players/meechie-johnson-jr.png",
-      "ig": "meechie.1",
-      "stats": {
-        "ppg": 17.2,
-        "rpg": 3.3,
-        "apg": 4.3,
-        "fg_pct": 41.4,
-        "gp": 32
-      }
+      "headshot_local": "images/players/jaron-saulsberry.jpg",
+      "ig": "guard_upronny",
+      "stats": null
     },
     {
       "name": "Kok Yat",
@@ -400,61 +421,6 @@ var ROSTER_DATA = {
       "type": "college",
       "headshot_local": "images/players/kok-yat.png",
       "ig": "tuloww.21",
-      "stats": null
-    },
-    {
-      "name": "Kayden Allen",
-      "position": "Guard",
-      "school": "Georgia Tech Commit",
-      "type": "highschool",
-      "class_year": 2026,
-      "commitment": "Georgia Tech",
-      "headshot_local": "images/players/kayden-allen.jpg",
-      "ig": "kaydenallennn",
-      "stats": null
-    },
-    {
-      "name": "Jaron Saulsberry",
-      "position": "Forward",
-      "school": "Ole Miss Commit",
-      "type": "highschool",
-      "class_year": 2026,
-      "commitment": "Ole Miss",
-      "headshot_local": "images/players/jaron-saulsberry.jpg",
-      "ig": "guard_upronny",
-      "stats": null
-    },
-    {
-      "name": "Gallagher Placide",
-      "position": "Forward",
-      "school": "Wake Forest Commit",
-      "type": "highschool",
-      "class_year": 2026,
-      "commitment": "Wake Forest",
-      "headshot_local": "images/players/gallagher-placide.jpg",
-      "ig": "gallagherplacide",
-      "stats": null
-    },
-    {
-      "name": "Gavin Placide",
-      "position": "Forward",
-      "school": "Wake Forest Commit",
-      "type": "highschool",
-      "class_year": 2026,
-      "commitment": "Wake Forest",
-      "headshot_local": "images/players/gavin-placide.jpg",
-      "ig": "gavinplacide",
-      "stats": null
-    },
-    {
-      "name": "Derrick Cross Jr.",
-      "position": "",
-      "school": "",
-      "type": "highschool",
-      "class_year": 2027,
-      "commitment": "",
-      "headshot_local": "images/players/derrick-cross-jr.jpg",
-      "ig": "jr_cross_15",
       "stats": null
     }
   ],

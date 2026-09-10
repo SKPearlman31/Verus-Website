@@ -57,22 +57,19 @@ NBA_PLAYERS = [
 COLLEGE_PLAYERS = [
     {"espn_id": 5101784, "name": "Akai Fleming",           "school": "Cincinnati",      "position": "Guard",  "ig": "akai.fleming"},
     {"espn_id": 5142608, "name": "Jaiden Glover-Toscano",  "school": "Saint Joseph's",  "position": "Guard",  "ig": "jglove.11"},
-    {"espn_id": 4710770, "name": "Meechie Johnson Jr.",    "school": "South Carolina",  "position": "Guard",  "ig": "meechie.1"},
     {"espn_id": 5311849, "name": "Devin Brown",            "school": "Notre Dame",      "position": "Guard",  "ig": "_devinbrown"},
 ]
 
 # ── High School Commits (static) ─────────────────────────────────────────
 HS_PLAYERS = [
-    {"name": "Kayden Allen",       "commitment": "Georgia Tech", "position": "Guard",   "ig": "kaydenallennn",     "photo": "images/players/kayden-allen.jpg"},
-    {"name": "Gallagher Placide",  "commitment": "Wake Forest",  "position": "Forward", "ig": "gallagherplacide",  "photo": "images/players/gallagher-placide.jpg"},
-    {"name": "Gavin Placide",      "commitment": "Wake Forest",  "position": "Forward", "ig": "gavinplacide",      "photo": "images/players/gavin-placide.jpg"},
-    {"name": "Jaron Saulsberry",   "commitment": "Ole Miss",     "position": "Forward", "ig": "guard_upronny",     "photo": "images/players/jaron-saulsberry.jpg"},
     {"name": "Derrick Cross Jr.",  "commitment": "",             "position": "",        "ig": "jr_cross_15",       "photo": "images/players/derrick-cross-jr.jpg", "class_year": 2027},
 ]
 
 # ── College/NIL players without ESPN stats (static) ──────────────────────
 COLLEGE_STATIC_PLAYERS = [
-    {"name": "Kok Yat", "position": "Forward", "school": "", "ig": "tuloww.21", "photo": "images/players/kok-yat.png"},
+    {"name": "Kayden Allen",     "position": "Guard",   "school": "Georgia Tech", "ig": "kaydenallennn", "photo": "images/players/kayden-allen.jpg"},
+    {"name": "Jaron Saulsberry", "position": "Forward", "school": "Ole Miss",     "ig": "guard_upronny", "photo": "images/players/jaron-saulsberry.jpg"},
+    {"name": "Kok Yat",          "position": "Forward", "school": "",             "ig": "tuloww.21",     "photo": "images/players/kok-yat.png"},
 ]
 
 # ── International Roster (static) ────────────────────────────────────────
@@ -118,6 +115,25 @@ def slug(name):
         .replace("é", "e")
         .replace(".", "")
     )
+
+
+# Generational suffixes are part of a name, never the surname we sort on.
+NAME_SUFFIXES = {"jr", "jr.", "sr", "sr.", "ii", "iii", "iv", "v"}
+
+
+def surname_key(name):
+    """Sort key for a player name, keyed on surname.
+
+    Trailing generational suffixes are stripped so "Derrick Cross Jr." files
+    under C. Hyphenated surnames stay whole ("Glover-Toscano"), and the
+    remaining given names break ties between players who share a surname.
+    """
+    parts = [w for w in name.replace(",", " ").split() if w]
+    while len(parts) > 1 and parts[-1].lower().strip(".") in {s.strip(".") for s in NAME_SUFFIXES}:
+        parts.pop()
+    if not parts:
+        return ("", "")
+    return (parts[-1].lower(), " ".join(parts[:-1]).lower())
 
 
 def fetch_gleague_stats(nba_id):
@@ -385,10 +401,7 @@ def process_college_players():
             "stats": None,
         })
 
-    results.sort(key=lambda p: (
-        0 if p["type"] == "college" else 1,
-        (p.get("school") or "zzz").lower(),
-    ))
+    results.sort(key=lambda p: surname_key(p["name"]))
     return results
 
 
