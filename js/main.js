@@ -77,7 +77,9 @@ function buildCollegeCard(p){
   const fallback=p.headshot_espn
     ? `this.onerror=null;this.src='${p.headshot_espn}';`
     : `this.onerror=null;this.parentElement.innerHTML='<span class=\\'placeholder\\'>V</span>';`;
-  const imgClass=isHS?' class="photo-contain"':'';
+  // Portrait photos letterbox rather than fill; HS cards always have portrait shots,
+  // and college entries opt in via photo_contain.
+  const imgClass=(isHS||p.photo_contain)?' class="photo-contain"':'';
   const photo=p.headshot_local
     ? `<img${imgClass} src="${resolveImg(p.headshot_local)}" alt="${p.name}" onerror="${fallback}">`
     : `<span class="placeholder">V</span>`;

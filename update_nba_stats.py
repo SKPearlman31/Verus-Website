@@ -67,8 +67,10 @@ HS_PLAYERS = [
 
 # ── College/NIL players without ESPN stats (static) ──────────────────────
 COLLEGE_STATIC_PLAYERS = [
-    {"name": "Kayden Allen",     "position": "Guard",   "school": "Georgia Tech", "ig": "kaydenallennn", "photo": "images/players/kayden-allen.jpg"},
-    {"name": "Jaron Saulsberry", "position": "Forward", "school": "Ole Miss",     "ig": "guard_upronny", "photo": "images/players/jaron-saulsberry.jpg"},
+    # photo_contain: portrait-orientation photos (taller than the 4:3 card frame)
+    # letterbox instead of filling, so the crop doesn't cut into the player's face.
+    {"name": "Kayden Allen",     "position": "Guard",   "school": "Georgia Tech", "ig": "kaydenallennn", "photo": "images/players/kayden-allen.jpg",     "photo_contain": True},
+    {"name": "Jaron Saulsberry", "position": "Forward", "school": "Ole Miss",     "ig": "guard_upronny", "photo": "images/players/jaron-saulsberry.jpg", "photo_contain": True},
     {"name": "Kok Yat",          "position": "Forward", "school": "",             "ig": "tuloww.21",     "photo": "images/players/kok-yat.png"},
 ]
 
@@ -397,6 +399,7 @@ def process_college_players():
             "school": entry.get("school", ""),
             "type": "college",
             "headshot_local": entry.get("photo"),
+            "photo_contain": entry.get("photo_contain", False),
             "ig": entry.get("ig", ""),
             "stats": None,
         })

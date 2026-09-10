@@ -1,6 +1,6 @@
 // Auto-generated — do not edit manually
 var ROSTER_DATA = {
-  "updated": "2026-09-10T12:59:03.070061",
+  "updated": "2026-09-10T13:09:04.620805",
   "season": "2025-26",
   "nba": [
     {
@@ -340,6 +340,7 @@ var ROSTER_DATA = {
       "school": "Georgia Tech",
       "type": "college",
       "headshot_local": "images/players/kayden-allen.jpg",
+      "photo_contain": true,
       "ig": "kaydenallennn",
       "stats": null
     },
@@ -411,6 +412,7 @@ var ROSTER_DATA = {
       "school": "Ole Miss",
       "type": "college",
       "headshot_local": "images/players/jaron-saulsberry.jpg",
+      "photo_contain": true,
       "ig": "guard_upronny",
       "stats": null
     },
@@ -420,6 +422,7 @@ var ROSTER_DATA = {
       "school": "",
       "type": "college",
       "headshot_local": "images/players/kok-yat.png",
+      "photo_contain": false,
       "ig": "tuloww.21",
       "stats": null
     }
