@@ -1,6 +1,6 @@
 // Auto-generated — do not edit manually
 var ROSTER_DATA = {
-  "updated": "2026-09-28T17:54:11.493967",
+  "updated": "2026-09-29T16:16:35.628816",
   "season": "2025-26",
   "nba": [
     {
@@ -96,32 +96,6 @@ var ROSTER_DATA = {
       "gleague_stats": null
     },
     {
-      "id": 1641803,
-      "name": "Tristen Newton",
-      "position": "Guard",
-      "team": "Houston Rockets",
-      "team_city": "Houston",
-      "team_abbr": "HOU",
-      "headshot_nba": "https://cdn.nba.com/headshots/nba/latest/1040x760/1641803.png",
-      "headshot_local": "images/players/tristen-newton.png",
-      "ig": "tristenewton",
-      "stats": {
-        "ppg": 12.0,
-        "rpg": 3.0,
-        "apg": 0.0,
-        "fg_pct": 44.4,
-        "gp": 1,
-        "team_abbr": "HOU"
-      },
-      "gleague_stats": {
-        "ppg": 25.8,
-        "rpg": 5.1,
-        "apg": 5.5,
-        "fg_pct": 47.8,
-        "gp": 49
-      }
-    },
-    {
       "id": 1641771,
       "name": "Jalen Slawson",
       "position": "Forward",
@@ -192,6 +166,32 @@ var ROSTER_DATA = {
         "team_abbr": "MIN"
       },
       "gleague_stats": null
+    },
+    {
+      "id": 1641803,
+      "name": "Tristen Newton",
+      "position": "Guard",
+      "team": "Sacramento Kings",
+      "team_city": "Sacramento",
+      "team_abbr": "SAC",
+      "headshot_nba": "https://cdn.nba.com/headshots/nba/latest/1040x760/1641803.png",
+      "headshot_local": "images/players/tristen-newton.png",
+      "ig": "tristenewton",
+      "stats": {
+        "ppg": 12.0,
+        "rpg": 3.0,
+        "apg": 0.0,
+        "fg_pct": 44.4,
+        "gp": 1,
+        "team_abbr": "SAC"
+      },
+      "gleague_stats": {
+        "ppg": 25.8,
+        "rpg": 5.1,
+        "apg": 5.5,
+        "fg_pct": 47.8,
+        "gp": 49
+      }
     },
     {
       "id": 1630544,
